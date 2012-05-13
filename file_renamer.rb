@@ -1,4 +1,4 @@
-# Version 1.2
+# Version 1.3
 # The program takes an input InThisKindOfFormat, and will turn it into a string in_this_kind_of_format.
 
 # The user is prompted for an input - the input is saved in a variable:
@@ -20,12 +20,10 @@ def camelcase_to_underscore(str)
 	underscored_and_downcased.gsub! /^_/, ""
 end
 
-def rename_method(str_to_rename)
-	new_filename = camelcase_to_underscore(str_to_rename)
-
+def rename_method(old_filename, new_filename)
 	puts "Is '#{new_filename}' the naming convention you were looking for?"
 	if gets.chomp.downcase == "yes"
-		File.rename(str_to_rename, new_filename) # Renaming the file
+		File.rename(old_filename, new_filename) # Renaming the file
 		puts "Alrighty - the file name is now #{new_filename}."
 	else
 		puts "No changes have been made."
@@ -33,4 +31,4 @@ def rename_method(str_to_rename)
 	end
 end
 
-rename_method(rename_me)
+rename_method(rename_me, camelcase_to_underscore(rename_me))
