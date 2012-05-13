@@ -11,8 +11,8 @@ CAPTURE_CAPITAL_REGEXP = /
 )            (?# Close the capture group so that the character will be captured)
 /x
 
-def camelcase_to_underscore(str)
-	underscored_and_downcased = str.gsub CAPTURE_CAPITAL_REGEXP do |matched_capital|
+def camelcase_to_underscore(camelcase_str)
+	underscored_and_downcased = camelcase_str.gsub CAPTURE_CAPITAL_REGEXP do |matched_capital|
 		matched_capital.prepend("_").downcase
 	end
 
@@ -20,12 +20,12 @@ def camelcase_to_underscore(str)
 	underscored_and_downcased.gsub! /^_/, ""
 end
 
-def rename_method(str_to_rename)
-	new_filename = camelcase_to_underscore(str_to_rename)
+def rename_camelcase_filename_to_underscore(camelcase_filename)
+	new_filename = camelcase_to_underscore(camelcase_filename)
 
 	puts "Is '#{new_filename}' the naming convention you were looking for?"
 	if gets.chomp.downcase == "yes"
-		File.rename(str_to_rename, new_filename) # Renaming the file
+		File.rename(camelcase_filename, new_filename) # Renaming the file
 		puts "Alrighty - the file name is now #{new_filename}."
 	else
 		puts "No changes have been made."
@@ -33,4 +33,4 @@ def rename_method(str_to_rename)
 	end
 end
 
-rename_method(rename_me)
+rename_camelcase_filename_to_underscore(rename_me)
