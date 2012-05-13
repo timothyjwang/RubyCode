@@ -27,7 +27,7 @@ while run_me == 1
 			user_sorting_choice = gets.chomp.to_s
 			
 			until user_sorting_choice == "1" || user_sorting_choice == "2"
-				puts "" # Blank space - easier to read, for now.
+				puts "" # Blank space - easier to read.
 				puts "Input error: expecting either a 1 or a 2."
 				puts big_ass_prompt
 				user_sorting_choice = gets.chomp.to_s
