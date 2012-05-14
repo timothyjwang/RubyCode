@@ -1,5 +1,4 @@
-# Step 1:
-# Create a deck with 52 cards
+# Step 1 - Create a deck with 52 cards
 def populate_deck
 	deck = []
 	card_suits = ["Diamonds", "Clubs", "Hearts", "Spades"]
@@ -21,25 +20,41 @@ end
 
 deck = populate_deck
 
-# Step 2:
-# "Shuffle" (randomize) it
+# Step 2 - "Shuffle" (randomize) it
 deck.sort_by!{rand}
 
-# Step 3:
-# Once shuffled, deal 2 cards to player
+# Step 3 - Once shuffled, deal 2 cards to player
+deck_index = 0
 players_hand = []
-players_hand.push(deck[0]).push(deck[1])
+players_hand.push(deck[deck_index])
+deck_index += 1
+players_hand.push(deck[deck_index])
+deck_index += 1
 
-# Step 4:
-# Ask "hit" or "stay"
-puts "Your hand contains a " + players_hand[0] + " and a " + players_hand[1]
-puts "Hit, or Stay?"
-	# deal card if "hit"
+# Method definitions
+def get_chomp_down
+	input = gets.chomp.downcase
+end
 
+def hit_or_stay
+	puts "Hit, or stay?"
+	puts "If you would like to view your hand, type 'cards'."
+	get_chomp_down
+end
 
+def tell_player_cards_in_hand(players_hand)
+	x = 0
+	players_hand = players_hand
+	while x < players_hand.length
+		puts players_hand[x]
+		x += 1
+	end
+end
 
-
-
+# Step 4a - Ask "hit" or "stay"
+until hit_or_stay == "hit" || hit_or_stay == "stay" || hit_or_stay == "cards"
+	hit_or_stay
+end
 
 
 
