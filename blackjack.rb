@@ -1,61 +1,39 @@
+# Step 1:
 # Create a deck with 52 cards
-# shuffle it
-deck = []
-card_suits = ["Diamonds", "Clubs", "Hearts", "Spades"]
-card_values = ["Ace", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine", "Ten", "Jack", "Queen", "King"]
-
-def add_card_to_deck
+def populate_deck
+	deck = []
+	card_suits = ["Diamonds", "Clubs", "Hearts", "Spades"]
+	card_values = ["Ace", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine", "Ten", "Jack", "Queen", "King"]
+	
 	x = 0	# card_suits index
 	y = 0	# card_values index
 
 	while deck.length < 52
-		deck.push(card_values[y] + " of " + card_suits[x])
 		until y == 13
+			deck.push(card_values[y] + " of " + card_suits[x])
 			y += 1
-			add_card_to_deck
 		end
-
 		y = 0
 		x += 1
 	end
+	deck
 end
 
-add_card_to_deck
+deck = populate_deck
+
+# Step 2:
+# "Shuffle" (randomize) it
 deck.sort_by!{rand}
-puts deck
 
-# # make all the below into a method:
-# until deck.length == 13
-# 	deck.push(card_values[y] + " of " + card_suits[x])
-# 	y += 1
-# end
-# y = 0
-# x += 1
-# until deck.length == 26
-# 	deck.push(card_values[y] + " of " + card_suits[x])
-# 	y += 1
-# end
-# y = 0
-# x += 1
-# until deck.length == 39
-# 	deck.push(card_values[y] + " of " + card_suits[x])
-# 	y += 1
-# end
-# y = 0
-# x += 1
-# until deck.length == 52
-# 	deck.push(card_values[y] + " of " + card_suits[x])
-# 	y += 1
-# end
+# Step 3:
+# Once shuffled, deal 2 cards to player
+players_hand = []
+players_hand.push(deck[0]).push(deck[1])
 
-
-
-
-
-
-
-# once shuffled, deal 2 cards to player
-# ask "hit" or "stay"
+# Step 4:
+# Ask "hit" or "stay"
+puts "Your hand contains a " + players_hand[0] + " and a " + players_hand[1]
+puts "Hit, or Stay?"
 	# deal card if "hit"
 
 
