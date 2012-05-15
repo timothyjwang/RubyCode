@@ -38,8 +38,6 @@ end
 
 def hit_or_stay
 	puts "Hit, or stay?"
-	puts "If you would like to view your hand, type 'cards'."
-	get_chomp_down
 end
 
 def tell_player_cards_in_hand(players_hand)
@@ -51,13 +49,28 @@ def tell_player_cards_in_hand(players_hand)
 	end
 end
 
-# Step 4a - Ask "hit" or "stay"
-until hit_or_stay == "hit" || hit_or_stay == "stay" || hit_or_stay == "cards"
+def hit_loop(deck, deck_index, players_hand)
+	deck = deck
+	deck_index = deck_index
+	players_hand = players_hand
+
 	hit_or_stay
+	until get_chomp_down == "stay"
+		players_hand.push(deck[deck_index])
+		deck_index += 1
+		tell_player_cards_in_hand(players_hand)
+		hit_or_stay
+	end
+	players_hand
 end
 
+# Step 4a - Ask "hit" or "stay"
+puts "You have been dealt two cards.  In your hand, you have:"
+tell_player_cards_in_hand(players_hand)
 
+final_hand = hit_loop(deck, deck_index, players_hand)
 
+puts final_hand
 
 
 
