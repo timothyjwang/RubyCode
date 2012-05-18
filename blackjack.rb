@@ -48,6 +48,20 @@ def hit_or_stay
 	puts "Hit, or stay?"
 end
 
+# The hand-scoring is not yet working properly
+# My first test yielded a Queen of Hearts (10), and a 10 of Diamonds
+# It properly told me that the total score was 20 (or so I thought...)
+# Then, on a "hit", I got a 3 of Diamonds, but was told the total score was 30
+# Another "hit" added a 4 of Diamonds, and was told the total score was 40
+# One last "hit" yielded a 5 of Diamonds, and was told the total score was 50
+
+# On a second test, I got a 4 of Diamonds, and a Queen of Diamonds (10)
+# I was told my score was 20 - I exited out of the test at this point.
+
+# It seems the score is being incremented by 10 per card added
+# Meaning the .include?("Jack"/"Queen"/"King") part is not functioning properly
+# It thinks everything is a 10...
+
 def tell_player_cards_in_hand(players_hand)
 	x = 0
 	players_hand = players_hand
@@ -55,15 +69,35 @@ def tell_player_cards_in_hand(players_hand)
 		puts players_hand[x]
 		x += 1
 	end
-end
 
-def score_the_cards(card)
-	current_card = card
-	card_value = 0
-
-	until card_value != 0
-		
+	# Scoring the hand
+	hand_score = 0
+	x = 0
+	current_card = players_hand[x]
+	while x < players_hand.length
+		if current_card.include?("Jack") || @current_card.include?("Queen") || @current_card.include?("King")
+			hand_score += 10
+			x += 1
+		elsif current_card.include?("Ace")
+			if hand_score < 21
+				hand_score += 11 unless ((hand_score + 11) > 21)
+				x += 1
+			else
+				hand_score += 1
+				x += 1
+			end
+		else
+			if current_card.include?() == true
+				hand_score += @current_card
+				x += 1
+			else
+				hand_score += @current_card.to_i
+				x += 1
+			end
+		end
 	end
+	# return hand_score here
+	puts "The value of the cards in your hand is #{hand_score}."
 end
 
 def hit_loop(shuffled_deck, deck_index, players_hand)
@@ -85,7 +119,7 @@ end
 puts "You have been dealt two cards.  In your hand, you have:"
 tell_player_cards_in_hand(players_hand)
 
-#final_hand = hit_loop(deck, deck_index, players_hand)
+final_hand = hit_loop(deck, deck_index, players_hand)
 
 
 
