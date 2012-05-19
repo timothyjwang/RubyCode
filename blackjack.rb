@@ -84,6 +84,8 @@ end
 # So the next problem is...the hit_loop is not properly
 # adding the next card in the sequence from the shuffled deck.
 
+# Herp-derp.  Not 5 minutes later I find and resolve the problem.
+
 def tell_player_cards_in_hand(players_hand)
 	x = 0
 	players_hand = players_hand
@@ -139,7 +141,7 @@ end
 puts "You have been dealt two cards.  In your hand, you have:"
 tell_player_cards_in_hand(players_hand)
 
-final_hand = hit_loop(deck, deck_index, players_hand)
+final_hand = hit_loop(shuffled_deck, deck_index, players_hand)
 
 
 
