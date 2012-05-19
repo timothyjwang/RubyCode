@@ -48,44 +48,6 @@ def hit_or_stay
 	puts "Hit, or stay?"
 end
 
-# 5/17/2012
-# The hand-scoring is not yet working properly
-# My first test yielded a Queen of Hearts (10), and a 10 of Diamonds
-# It properly told me that the total score was 20 (or so I thought...)
-# Then, on a "hit", I got a 3 of Diamonds, but was told the total score was 30
-# Another "hit" added a 4 of Diamonds, and was told the total score was 40
-# One last "hit" yielded a 5 of Diamonds, and was told the total score was 50
-
-# On a second test, I got a 4 of Diamonds, and a Queen of Diamonds (10)
-# I was told my score was 20 - I exited out of the test at this point.
-
-# It seems the score is being incremented by 10 per card added
-# Meaning the .include?("Jack"/"Queen"/"King") part is not functioning properly
-# It thinks everything is a 10...
-
-
-
-# 5/18/2012
-# Huzzah! The scoring seems to be working, now...
-# First test, a 9 of Hearts and a 9 of Spades - was told the score was 18. Awesome!
-# Did a "hit" - added a 3 of Diamonds. Was told the score was 21.  Swoot!
-
-# Second test - 7 of Clubs + 3 of Hearts, score of 10. "Hit" added a 3 of Diamonds. Score = 13.
-# The next few "hits" added a 4 of D, 5 of D and 6 of D; the score updated to 17, 22 and 28, respectively.
-# Scoring seems to be updating properly...but it's odd that I wound up with a 3 -> 4 -> 5 -> 6 of Diamonds,
-# in succession.  The next few hits resulted in:
-# 7 of D (s = 35), 8 of D (s = 43), 9 of D (s = 52), 10 of D (s = 62), J of D (s = 72), Q of D (s = 82),
-# K of D (s = 92), and lastly, an Ace of Clubs (s = 93).
-# As the score went from 92 -> 93, the Ace-scoring portion is (somewhat) functional...
-
-# Still, I notice that it cycled through where it "started" off at in the Diamonds suit, then moved onto
-# the Clubs suit (as appropriate, given the decks original construction).
-
-# So the next problem is...the hit_loop is not properly
-# adding the next card in the sequence from the shuffled deck.
-
-# Herp-derp.  Not 5 minutes later I find and resolve the problem.
-
 def tell_player_cards_in_hand(players_hand)
 	x = 0
 	players_hand = players_hand
@@ -93,33 +55,6 @@ def tell_player_cards_in_hand(players_hand)
 		puts players_hand[x]
 		x += 1
 	end
-
-	# Scoring the hand
-	hand_score = 0
-	x = 0
-	while x < players_hand.length
-		# Scoring Jacks, Queens and Kings
-		if players_hand[x].include?("Jack") || players_hand[x].include?("Queen") || players_hand[x].include?("King")
-			hand_score += 10
-			x += 1
-		# Scoring Aces
-		elsif players_hand[x].include?("Ace")
-			if hand_score < 21
-				hand_score += 11 unless ((hand_score + 11) > 21)
-				x += 1
-			else
-				hand_score += 1
-				x += 1
-			end
-		# Scoring everything else
-		else
-			# Strip everything but the numbers from the string
-			hand_score += players_hand[x].gsub(/[^0-9]/, '').to_i
-			x += 1
-		end
-	end
-	# return hand_score here
-	puts "The value of the cards in your hand is #{hand_score}."
 end
 
 def hit_loop(shuffled_deck, deck_index, players_hand)
@@ -137,20 +72,55 @@ def hit_loop(shuffled_deck, deck_index, players_hand)
 	players_hand
 end
 
+def tell_player_final_score(players_hand)
+	# Scoring the hand
+	hand_score = 0
+	x = 0
+	while x < players_hand.length
+		# Scoring Jacks, Queens and Kings
+		if players_hand[x].include?("Jack") || players_hand[x].include?("Queen") || players_hand[x].include?("King")
+			hand_score += 10
+			x += 1
+		# Scoring Aces
+		# Not completely working properly, yet. In one test, a 5 + 9 was in the in initial hand (s = 14),
+		# then on a "hit" an ace was added, but the score remained at 14.
+		elsif players_hand[x].include?("Ace")
+			if hand_score < 21
+				hand_score += 11 unless ((hand_score + 11) > 21)
+				x += 1
+			else
+				hand_score += 1
+				x += 1
+			end
+		# Scoring everything else
+		else
+			# Strip everything but the numbers from the string
+			hand_score += players_hand[x].gsub(/[^0-9]/, '').to_i
+			x += 1
+		end
+	end
+	# return hand_score here
+	puts "The value of the cards in your hand is #{hand_score}."
+	hand_score
+end
+
 # Step 4a - Ask "hit" or "stay"
 puts "You have been dealt two cards.  In your hand, you have:"
 tell_player_cards_in_hand(players_hand)
 
+# The player is put into the hit_loop - adding cards until they declare "stay"
+# Save the player's hand in final_hand
 final_hand = hit_loop(shuffled_deck, deck_index, players_hand)
 
+# Tell the player the final score of their hand
+hand_score = tell_player_final_score(players_hand)
 
-
-
-
-
-
-
-
-
-
-# if dealer is <= 15, they hit (but that's for later)
+# Determine if the player busted:
+if (hand_score > 21)
+	puts "Your score is over 21 - you busted."
+	exit 0
+else
+	# If not, move on to the dealer's game:
+	# if dealer is <= 15, they hit
+	
+end
