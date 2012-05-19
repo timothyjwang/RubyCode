@@ -48,6 +48,7 @@ def hit_or_stay
 	puts "Hit, or stay?"
 end
 
+# 5/17/2012
 # The hand-scoring is not yet working properly
 # My first test yielded a Queen of Hearts (10), and a 10 of Diamonds
 # It properly told me that the total score was 20 (or so I thought...)
@@ -62,6 +63,27 @@ end
 # Meaning the .include?("Jack"/"Queen"/"King") part is not functioning properly
 # It thinks everything is a 10...
 
+
+
+# 5/18/2012
+# Huzzah! The scoring seems to be working, now...
+# First test, a 9 of Hearts and a 9 of Spades - was told the score was 18. Awesome!
+# Did a "hit" - added a 3 of Diamonds. Was told the score was 21.  Swoot!
+
+# Second test - 7 of Clubs + 3 of Hearts, score of 10. "Hit" added a 3 of Diamonds. Score = 13.
+# The next few "hits" added a 4 of D, 5 of D and 6 of D; the score updated to 17, 22 and 28, respectively.
+# Scoring seems to be updating properly...but it's odd that I wound up with a 3 -> 4 -> 5 -> 6 of Diamonds,
+# in succession.  The next few hits resulted in:
+# 7 of D (s = 35), 8 of D (s = 43), 9 of D (s = 52), 10 of D (s = 62), J of D (s = 72), Q of D (s = 82),
+# K of D (s = 92), and lastly, an Ace of Clubs (s = 93).
+# As the score went from 92 -> 93, the Ace-scoring portion is (somewhat) functional...
+
+# Still, I notice that it cycled through where it "started" off at in the Diamonds suit, then moved onto
+# the Clubs suit (as appropriate, given the decks original construction).
+
+# So the next problem is...the hit_loop is not properly
+# adding the next card in the sequence from the shuffled deck.
+
 def tell_player_cards_in_hand(players_hand)
 	x = 0
 	players_hand = players_hand
@@ -73,12 +95,13 @@ def tell_player_cards_in_hand(players_hand)
 	# Scoring the hand
 	hand_score = 0
 	x = 0
-	current_card = players_hand[x]
 	while x < players_hand.length
-		if current_card.include?("Jack") || @current_card.include?("Queen") || @current_card.include?("King")
+		# Scoring Jacks, Queens and Kings
+		if players_hand[x].include?("Jack") || players_hand[x].include?("Queen") || players_hand[x].include?("King")
 			hand_score += 10
 			x += 1
-		elsif current_card.include?("Ace")
+		# Scoring Aces
+		elsif players_hand[x].include?("Ace")
 			if hand_score < 21
 				hand_score += 11 unless ((hand_score + 11) > 21)
 				x += 1
@@ -86,14 +109,11 @@ def tell_player_cards_in_hand(players_hand)
 				hand_score += 1
 				x += 1
 			end
+		# Scoring everything else
 		else
-			if current_card.include?() == true
-				hand_score += @current_card
-				x += 1
-			else
-				hand_score += @current_card.to_i
-				x += 1
-			end
+			# Strip everything but the numbers from the string
+			hand_score += players_hand[x].gsub(/[^0-9]/, '').to_i
+			x += 1
 		end
 	end
 	# return hand_score here
