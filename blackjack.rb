@@ -81,21 +81,24 @@ def tell_player_final_score(players_hand)
 		if players_hand[x].include?("Jack") || players_hand[x].include?("Queen") || players_hand[x].include?("King")
 			hand_score += 10
 			x += 1
-		# Scoring Aces
-		# Not completely working properly, yet. In one test, a 5 + 9 was in the in initial hand (s = 14),
-		# then on a "hit" an ace was added, but the score remained at 14.
-		elsif players_hand[x].include?("Ace")
-			if hand_score < 21
-				hand_score += 11 unless ((hand_score + 11) > 21)
-				x += 1
-			else
-				hand_score += 1
-				x += 1
-			end
-		# Scoring everything else
-		else
+		# Scoring "standard" numbers (2 through 10)
+		elsif
 			# Strip everything but the numbers from the string
 			hand_score += players_hand[x].gsub(/[^0-9]/, '').to_i
+			x += 1
+		# Scoring Aces
+		# Not completely working properly
+		# Note no. 1: isn't adding 1 if hand_score is already > 21
+		# Note no. 2: Got lucky with one test - an Ace of Hearts + Ace of Spades. On "stay," score was 0.
+			# so it's not adding 1...
+		# Note no. 3: Another lucky test - Ace of Spades + King of Diamonds. On "stay," score was 10.
+			# Ace not being counted as an 11...
+		elsif players_hand[x].include?("Ace")
+			if (hand_score + 11) > 21
+				hand_score += 1
+			else
+				hand_score += 11
+			end 
 			x += 1
 		end
 	end
@@ -122,5 +125,5 @@ if (hand_score > 21)
 else
 	# If not, move on to the dealer's game:
 	# if dealer is <= 15, they hit
-	
+
 end
