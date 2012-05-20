@@ -30,14 +30,24 @@ deck = populate_deck(card_suits, card_values)
 
 # Step 2 - "Shuffle" (randomize) it
 shuffled_deck = deck.sort_by{rand}
+# Will eventually remove the two lines, beloew - for now, it helps with keeping track of what
+# cards will be dealt to the player & dealer during testing
+puts "The first four cards in shuffled_deck are:"
+puts "#{shuffled_deck[0..3]}"
+
+def reevaluate_deck_index(players_hand)
+	x = players_hand.length
+end
 
 # Step 3 - Once shuffled, deal 2 cards to player
-deck_index = 0
+# Note for later: use players_hand.length to find/use the next index to push?
+# Idea from the_dealers_turn section.
 players_hand = []
+deck_index = reevaluate_deck_index(players_hand)
 players_hand.push(shuffled_deck[deck_index])
-deck_index += 1
+deck_index += 1 	# Want to replace this line with deck_index
 players_hand.push(shuffled_deck[deck_index])
-deck_index += 1
+deck_index += 1 	# Want to replace this line with deck_index
 
 # Method definitions
 def get_chomp_down
@@ -93,6 +103,7 @@ def tell_player_final_score(players_hand)
 			# so it's not adding 1...
 		# Note no. 3: Another lucky test - Ace of Spades + King of Diamonds. On "stay," score was 10.
 			# Ace not being counted as an 11...
+		# Note no. 4: Next test - Ace of Clubs + Jack of Diamonds = score of 10.
 		elsif players_hand[x].include?("Ace")
 			if (hand_score + 11) > 21
 				hand_score += 1
@@ -118,12 +129,48 @@ final_hand = hit_loop(shuffled_deck, deck_index, players_hand)
 # Tell the player the final score of their hand
 hand_score = tell_player_final_score(players_hand)
 
+def the_dealers_turn(shuffled_deck, final_hand)
+	# Find the index for shuffled deck using final_hand.length
+	x = final_hand.length
+	shuffled_deck = shuffled_deck
+
+	dealers_hand = []
+	dealers_hand.push(shuffled_deck[x])
+	x += 1
+	puts "The dealer's hand contains #{dealers_hand}"
+	dealers_hand.push(shuffled_deck[x])
+	x += 1
+	puts "The dealer's hand contains #{dealers_hand}"
+
+
+
+
+
+
+	# if dealer is <= 15, they hit
+end
+
 # Determine if the player busted:
 if (hand_score > 21)
 	puts "Your score is over 21 - you busted."
 	exit 0
 else
 	# If not, move on to the dealer's game:
-	# if dealer is <= 15, they hit
-
+	the_dealers_turn(shuffled_deck, final_hand)
 end
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
