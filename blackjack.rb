@@ -33,7 +33,7 @@ shuffled_deck = deck.sort_by{rand}
 # Will eventually remove the two lines, beloew - for now, it helps with keeping track of what
 # cards will be dealt to the player & dealer during testing
 puts "The first four cards in shuffled_deck are:"
-puts "#{shuffled_deck[0..3]}"
+puts "#{shuffled_deck[0..5]}"
 
 def reevaluate_deck_index(players_hand)
 	x = players_hand.length
@@ -82,7 +82,7 @@ def hit_loop(shuffled_deck, deck_index, players_hand)
 	players_hand
 end
 
-def tell_player_final_score(players_hand)
+def evaluate_hand_score(players_hand)
 	# Scoring the hand
 	hand_score = 0
 	x = 0
@@ -91,30 +91,21 @@ def tell_player_final_score(players_hand)
 		if players_hand[x].include?("Jack") || players_hand[x].include?("Queen") || players_hand[x].include?("King")
 			hand_score += 10
 			x += 1
-		# Scoring "standard" numbers (2 through 10)
-		elsif
-			# Strip everything but the numbers from the string
-			hand_score += players_hand[x].gsub(/[^0-9]/, '').to_i
-			x += 1
 		# Scoring Aces
-		# Not completely working properly
-		# Note no. 1: isn't adding 1 if hand_score is already > 21
-		# Note no. 2: Got lucky with one test - an Ace of Hearts + Ace of Spades. On "stay," score was 0.
-			# so it's not adding 1...
-		# Note no. 3: Another lucky test - Ace of Spades + King of Diamonds. On "stay," score was 10.
-			# Ace not being counted as an 11...
-		# Note no. 4: Next test - Ace of Clubs + Jack of Diamonds = score of 10.
 		elsif players_hand[x].include?("Ace")
 			if (hand_score + 11) > 21
 				hand_score += 1
 			else
 				hand_score += 11
 			end 
+			x += 1	
+		# Scoring "standard" numbers (2 through 10)
+		elsif
+			# Strip everything but the numbers from the string
+			hand_score += players_hand[x].gsub(/[^0-9]/, '').to_i
 			x += 1
 		end
 	end
-	# return hand_score here
-	puts "The value of the cards in your hand is #{hand_score}."
 	hand_score
 end
 
@@ -127,7 +118,7 @@ tell_player_cards_in_hand(players_hand)
 final_hand = hit_loop(shuffled_deck, deck_index, players_hand)
 
 # Tell the player the final score of their hand
-hand_score = tell_player_final_score(players_hand)
+hand_score = evaluate_hand_score(players_hand)
 
 def the_dealers_turn(shuffled_deck, final_hand)
 	# Find the index for shuffled deck using final_hand.length
@@ -142,15 +133,15 @@ def the_dealers_turn(shuffled_deck, final_hand)
 	x += 1
 	puts "The dealer's hand contains #{dealers_hand}"
 
-
-
-
-
-
 	# if dealer is <= 15, they hit
+	until (evaluate_hand_score(dealers_hand) > 15)
+		dealers_hand.push(shuffled_deck[x])
+		x += 1
+	end
 end
 
 # Determine if the player busted:
+puts "The value of the cards in your hand is #{hand_score}."
 if (hand_score > 21)
 	puts "Your score is over 21 - you busted."
 	exit 0
