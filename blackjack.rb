@@ -114,29 +114,24 @@ puts "You have been dealt two cards.  In your hand, you have:"
 tell_player_cards_in_hand(players_hand)
 
 # The player is put into the hit_loop - adding cards until they declare "stay"
-# Save the player's hand in final_hand
-final_hand = hit_loop(shuffled_deck, deck_index, players_hand)
+# Save the player's hand in players_final_hand
+players_final_hand = hit_loop(shuffled_deck, deck_index, players_hand)
 
 # Tell the player the final score of their hand
 hand_score = evaluate_hand_score(players_hand)
 
-def the_dealers_turn(shuffled_deck, final_hand)
-	# Find the index for shuffled deck using final_hand.length
-	x = final_hand.length
+def the_dealers_turn(shuffled_deck, dealers_hand, players_final_hand)
+	# Find the index for shuffled deck using players_final_hand.length
+	# + dealers_hand.length
+	x = (players_final_hand.length + dealers_hand.length)
 	shuffled_deck = shuffled_deck
-
-	dealers_hand = []
-	dealers_hand.push(shuffled_deck[x])
-	x += 1
-	puts "The dealer's hand contains #{dealers_hand}"
-	dealers_hand.push(shuffled_deck[x])
-	x += 1
-	puts "The dealer's hand contains #{dealers_hand}"
+	dealers_hand = dealers_hand
+	dealers_hand_value = evaluate_hand_score(dealers_hand)
 
 	# if dealer is <= 15, they hit
-	until (evaluate_hand_score(dealers_hand) > 15)
+	until dealers_hand_value > 15
 		dealers_hand.push(shuffled_deck[x])
-		x += 1
+		dealers_hand_value
 	end
 end
 
@@ -147,15 +142,33 @@ if (hand_score > 21)
 	exit 0
 else
 	# If not, move on to the dealer's game:
-	the_dealers_turn(shuffled_deck, final_hand)
+	dealers_hand = []
+	# Find the index for shuffled deck using players_final_hand.length
+	x = players_final_hand.length
+	dealers_hand.push(shuffled_deck[x])
+	x += 1
+	puts "The dealer's hand contains #{dealers_hand}"
+	dealers_hand.push(shuffled_deck[x])
+	x += 1
+	puts "The dealer's hand contains #{dealers_hand}"
+
+	dealers_final_hand = the_dealers_turn(shuffled_deck, dealers_hand, players_final_hand)
 end
 
 
 
 
 
+# Note:
+# the_dealers_turn not working
+# (Line 134)
+# If the dealers_hand_value > 15, it stops, as appropriate
+# But if dealers_hand_value <= 15, it stops, stuck in an infinite loop, expecting something
 
+# The same problem (above) occurs if line 134 is completely removed
 
+# (On line 134) If dealers_hand_value is replaced with dealers_hand_value = evaluate_hand_score(dealers_hand)
+# The program will stop even if the value is < 15
 
 
 
