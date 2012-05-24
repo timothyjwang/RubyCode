@@ -128,9 +128,14 @@ def the_dealers_turn(shuffled_deck, dealers_hand, players_final_hand)
 	dealers_hand = dealers_hand
 	dealers_hand_value = evaluate_hand_score(dealers_hand)
 
+	# Temporarily inserting this puts to tell the dealers_hand_value
+	# remove later
+	puts "The value of the dealer's hand is #{dealers_hand_value}."
+
 	# if dealer is <= 15, they hit
 	until dealers_hand_value > 15
 		dealers_hand.push(shuffled_deck[x])
+		x += 1
 		dealers_hand_value
 	end
 end
