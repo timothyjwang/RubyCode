@@ -136,8 +136,11 @@ def the_dealers_turn(shuffled_deck, dealers_hand, players_final_hand)
 	until dealers_hand_value > 15
 		dealers_hand.push(shuffled_deck[x])
 		x += 1
-		dealers_hand_value
+		puts "The dealer's hand contains #{dealers_hand}."
+		dealers_hand_value = evaluate_hand_score(dealers_hand)
+		puts "The value of the dealers hand is #{dealers_hand_value}."
 	end
+	dealers_hand_value = evaluate_hand_score(dealers_hand)
 end
 
 # Determine if the player busted:
@@ -158,28 +161,22 @@ else
 	puts "The dealer's hand contains #{dealers_hand}"
 
 	dealers_final_hand = the_dealers_turn(shuffled_deck, dealers_hand, players_final_hand)
+
+	# Finally, score the player's hand against the dealer's hand:
+	puts "Your score is #{hand_score}, and the dealer's score is #{dealers_final_hand}."
+	if hand_score > dealers_final_hand
+		# Player wins
+		puts "You win!"
+	elsif dealers_final_hand > hand_score
+		# Determine if the dealer busted
+		if dealers_final_hand > 21
+			puts "The dealer busted."
+		else
+			# Dealer wins
+			puts "The dealer wins."
+		end
+	else
+		# Tie
+		puts "It's a tie."
+	end
 end
-
-
-
-
-
-# Note:
-# the_dealers_turn not working
-# (Line 134)
-# If the dealers_hand_value > 15, it stops, as appropriate
-# But if dealers_hand_value <= 15, it stops, stuck in an infinite loop, expecting something
-
-# The same problem (above) occurs if line 134 is completely removed
-
-# (On line 134) If dealers_hand_value is replaced with dealers_hand_value = evaluate_hand_score(dealers_hand)
-# The program will stop even if the value is < 15
-
-
-
-
-
-
-
-
-
