@@ -30,24 +30,38 @@ deck = populate_deck(card_suits, card_values)
 
 # Step 2 - "Shuffle" (randomize) it
 shuffled_deck = deck.sort_by{rand}
+
 # Will eventually remove the two lines, beloew - for now, it helps with keeping track of what
 # cards will be dealt to the player & dealer during testing
-puts "The first four cards in shuffled_deck are:"
-puts "#{shuffled_deck[0..5]}"
+puts "The first ten cards in shuffled_deck are:"
+puts "#{shuffled_deck[0..9]}"
 
-def reevaluate_deck_index(players_hand)
-	x = players_hand.length
+def deal_card(person, shuffled_deck, deck_index)
+	person.push(shuffled_deck[deck_index])
 end
 
 # Step 3 - Once shuffled, deal 2 cards to player
 # Note for later: use players_hand.length to find/use the next index to push?
 # Idea from the_dealers_turn section.
+deck_index = 0
+
 players_hand = []
-deck_index = reevaluate_deck_index(players_hand)
-players_hand.push(shuffled_deck[deck_index])
-deck_index += 1 	# Want to replace this line with deck_index
-players_hand.push(shuffled_deck[deck_index])
-deck_index += 1 	# Want to replace this line with deck_index
+deal_card(players_hand, shuffled_deck, deck_index)
+puts "You have been dealt: #{shuffled_deck[deck_index]}."
+deck_index += 1
+deal_card(players_hand, shuffled_deck, deck_index)
+puts "You have been dealt: #{shuffled_deck[deck_index]}."
+deck_index += 1
+
+# Will eventually remove the blatant showcasing of what, exactly, is in the dealers hand - 
+# for now, it helps with testing/evaluation:
+dealers_hand = []
+deal_card(dealers_hand, shuffled_deck, deck_index)
+deck_index += 1
+deal_card(dealers_hand, shuffled_deck, deck_index)
+deck_index += 1
+puts "The dealer has been dealt two cards."
+puts "The dealer is showing: #{dealers_hand[1]}."
 
 # Method definitions
 def get_chomp_down
@@ -58,13 +72,11 @@ def hit_or_stay
 	puts "Hit, or stay?"
 end
 
-def tell_player_cards_in_hand(players_hand)
-	x = 0
-	players_hand = players_hand
-	while x < players_hand.length
-		puts players_hand[x]
-		x += 1
-	end
+def tell_player_hand_and_score(players_hand)
+	puts "Your hand contains: #{players_hand}."
+	puts "Your hand value is #{evaluate_hand_score(players_hand)}."
+	hand_value = evaluate_hand_score(players_hand)
+	hand_value
 end
 
 def hit_loop(shuffled_deck, deck_index, players_hand)
@@ -76,16 +88,39 @@ def hit_loop(shuffled_deck, deck_index, players_hand)
 	until get_chomp_down == "stay"
 		players_hand.push(shuffled_deck[deck_index])
 		deck_index += 1
-		tell_player_cards_in_hand(players_hand)
-		hit_or_stay
+				
+		# Busted?
+		# The following if/else will not return busted if score = 21 (as appropriate).
+		# Player can still chose to "hit." Incorporate anti-stupidity net by 
+		# automatically stopping if the score == 21?
+		busted = tell_player_hand_and_score(players_hand)
+		if busted > 21
+			puts "You busted."
+			exit 0
+		else
+			hit_or_stay
+		end
 	end
 	players_hand
 end
 
 def evaluate_hand_score(players_hand)
+	# First off, determine if the hand contains an Ace.
+	# If so, remove it from the array, and .push it to the last place.
+	# Make sure Aces get evaluated last.
+	y = 0        # indexing for the Ace-checking
+	while y < players_hand.length
+		if players_hand[y].include?("Ace")
+			players_hand.push(players_hand.delete_at(y))
+			y += 1
+		else
+			y += 1
+		end
+	end
+
 	# Scoring the hand
 	hand_score = 0
-	x = 0
+	x = 0       # indexing for the hand scoring, below
 	while x < players_hand.length
 		# Scoring Jacks, Queens and Kings
 		if players_hand[x].include?("Jack") || players_hand[x].include?("Queen") || players_hand[x].include?("King")
@@ -109,74 +144,86 @@ def evaluate_hand_score(players_hand)
 	hand_score
 end
 
-# Step 4a - Ask "hit" or "stay"
-puts "You have been dealt two cards.  In your hand, you have:"
-tell_player_cards_in_hand(players_hand)
-
-# The player is put into the hit_loop - adding cards until they declare "stay"
-# Save the player's hand in players_final_hand
-players_final_hand = hit_loop(shuffled_deck, deck_index, players_hand)
-
-# Tell the player the final score of their hand
-hand_score = evaluate_hand_score(players_hand)
-
-def the_dealers_turn(shuffled_deck, dealers_hand, players_final_hand)
-	# Find the index for shuffled deck using players_final_hand.length
-	# + dealers_hand.length
-	x = (players_final_hand.length + dealers_hand.length)
-	shuffled_deck = shuffled_deck
-	dealers_hand = dealers_hand
-	dealers_hand_value = evaluate_hand_score(dealers_hand)
-
-	# Temporarily inserting this puts to tell the dealers_hand_value
-	# remove later
-	puts "The value of the dealer's hand is #{dealers_hand_value}."
-
-	# if dealer is <= 15, they hit
-	until dealers_hand_value > 15
-		dealers_hand.push(shuffled_deck[x])
-		x += 1
-		puts "The dealer's hand contains #{dealers_hand}."
-		dealers_hand_value = evaluate_hand_score(dealers_hand)
-		puts "The value of the dealers hand is #{dealers_hand_value}."
-	end
-	dealers_hand_value = evaluate_hand_score(dealers_hand)
-end
-
-# Determine if the player busted:
-puts "The value of the cards in your hand is #{hand_score}."
-if (hand_score > 21)
-	puts "Your score is over 21 - you busted."
-	exit 0
-else
-	# If not, move on to the dealer's game:
-	dealers_hand = []
-	# Find the index for shuffled deck using players_final_hand.length
-	x = players_final_hand.length
-	dealers_hand.push(shuffled_deck[x])
-	x += 1
-	puts "The dealer's hand contains #{dealers_hand}"
-	dealers_hand.push(shuffled_deck[x])
-	x += 1
-	puts "The dealer's hand contains #{dealers_hand}"
-
-	dealers_final_hand = the_dealers_turn(shuffled_deck, dealers_hand, players_final_hand)
-
-	# Finally, score the player's hand against the dealer's hand:
-	puts "Your score is #{hand_score}, and the dealer's score is #{dealers_final_hand}."
-	if hand_score > dealers_final_hand
-		# Player wins
-		puts "You win!"
-	elsif dealers_final_hand > hand_score
-		# Determine if the dealer busted
-		if dealers_final_hand > 21
-			puts "The dealer busted."
-		else
-			# Dealer wins
-			puts "The dealer wins."
-		end
+def is_blackjack(hand_in_question)
+	if hand_in_question.include?("Ace") && hand_in_question.include?("Jack")
+		true
 	else
-		# Tie
-		puts "It's a tie."
+		false
 	end
 end
+
+# Player gets put into the hit_loop
+# Cards are dealt on "hit," a score is kept, and the final results are saved in players_final_hand
+# Also, save it out to an integer in players_score
+players_final_hand = hit_loop(shuffled_deck, deck_index, players_hand)
+players_score = evaluate_hand_score(players_final_hand)
+player_has_blackjack = is_blackjack(players_final_hand)
+
+# The dealers turn
+# First off, update deck_index to be the sum of dealers_hand + however many cards are in players_final_hand
+deck_index = players_final_hand.length + dealers_hand.length
+
+# Until the value of dealers_hand > 15, they hit
+until evaluate_hand_score(dealers_hand) > 15
+	dealers_hand.push(shuffled_deck[deck_index])
+	puts "The dealer adds a #{shuffled_deck[deck_index]} to their hand."
+	deck_index += 1
+end
+dealers_score = evaluate_hand_score(dealers_hand)
+# The dealer busts if over 21
+if dealers_score > 21
+	puts "The dealer busts with #{dealers_score}."
+	exit 0
+end
+dealer_has_blackjack = is_blackjack(dealers_hand)
+
+# Final scoring
+# First, does anyone have a Blackjack?
+if player_has_blackjack == true || dealer_has_blackjack == true
+	# If one has a blackjack, and the other does not, it's an insta-win.
+	if player_has_blackjack == true && dealer_has_blackjack == false
+		# Player wins
+		puts "Your Blackjack trumps the dealer's #{dealers_hand}."
+	elsif player_has_blackjack == false && dealer_has_blackjack == true
+		# Dealer wins
+		puts "The dealer's Blackjack trumps your #{players_final_hand}."
+	elsif player_has_blackjack == true && dealer_has_blackjack == true
+		# Blackjack tie
+		puts "Both you and the dealer have a Blackjack - it's a tie."
+	end
+
+# Second, if no Blackjacks are in anyone's hand:
+elsif players_score > dealers_score
+	puts "Your #{players_score} whomps the dealer's meager #{dealers_score}."
+elsif dealers_score > players_score
+	puts "The dealer's #{dealers_score} eats your #{players_score} for breakfast."
+else
+	puts "It's a tie at #{players_score}."
+end
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
