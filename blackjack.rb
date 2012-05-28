@@ -1,4 +1,4 @@
-# Blackjack.rb version 1.2
+# Blackjack.rb version 1.3
 
 # Notes for future versions:
 # Add a wager system - make the game loop so long as the player has "credits" with which to wager
@@ -14,6 +14,13 @@
 # Currently stuck with getting the round_of_blackjack to return the appropriate result
 # After this has been resolved, then move onto: 1. updating player_credits, 2. looping play_again
 # as long as the player wants
+
+# Replaced place_a_wage(player_credits) with player_credits = place_a_wage(player_credits) - in method play_again
+# Removed return player_credits, and replace it with play_again(player_credits) - at the end of place_a_wage
+
+# Works well so far - losing games dedut the bid from the player's credits
+# However, if they player busts, the program exits - simple fix, if they player busts, deduct their bid from
+# the player's credits, and then place_a_wage(player_credits).
 
 def round_of_blackjack
 	card_suits = [" of Diamonds", " of Clubs", " of Hearts", " of Spades"]
@@ -99,7 +106,8 @@ def round_of_blackjack
 			busted = tell_player_hand_and_score(players_hand)
 			if busted > 21
 				puts "You busted."
-				exit 0
+				round_result("lose")
+				play_again(player_credits)
 			else
 				hit_or_stay
 			end
@@ -175,6 +183,11 @@ def round_of_blackjack
 	end
 	dealer_has_blackjack = is_blackjack(dealers_hand)
 
+	# Results
+	def round_result(result)
+		result = result
+	end
+
 	# Final scoring
 	# First, does anyone have a Blackjack?
 	if player_has_blackjack == true || dealer_has_blackjack == true
@@ -182,28 +195,30 @@ def round_of_blackjack
 		if player_has_blackjack == true && dealer_has_blackjack == false
 			# Player wins
 			puts "Your Blackjack trumps the dealer's #{dealers_hand}."
-			return "win"
+			round_result("win")
 		elsif player_has_blackjack == false && dealer_has_blackjack == true
 			# Dealer wins
 			puts "The dealer's Blackjack trumps your #{players_final_hand}."
-			return "lose"
+			round_result("lose")
 		elsif player_has_blackjack == true && dealer_has_blackjack == true
 			# Blackjack tie
 			puts "Both you and the dealer have a Blackjack - it's a tie."
-			return "tie"
+			round_result("tie")
 		end
 
 	# Second, if no Blackjacks are in anyone's hand:
 	elsif players_score > dealers_score
 		puts "Your #{players_score} whomps the dealer's meager #{dealers_score}."
-		return "win"
+		round_result("win")
 	elsif dealers_score > players_score
 		puts "The dealer's #{dealers_score} eats your #{players_score} for breakfast."
-		return "lose"
+		round_result("lose")
 	else
 		puts "It's a tie at #{players_score}."
-		return "tie"
+		round_result("tie")
 	end
+
+	round_result
 end
 
 # Wager system:
@@ -240,21 +255,22 @@ def place_a_wage(player_credits)
 		puts "It was a tie - you still have #{player_credits}."
 		# Tie - no change to player_credits
 	end
-	return player_credits
+
+	play_again(player_credits)
 end
 
-# I think I know a way to update player_credits - below, change place_a_wage(player_credits)
-# to player_credits = place_a_wage(player_credits)?
-
-# Then, remove return player_credits, above, and replace it with play_again(player_credits)?
-
 def play_again(player_credits)
-	puts "Care to play a round of blackjack?"
-	if gets.chomp.downcase == "yes"
-		place_a_wage(player_credits)
-	else
-		puts "Alright then, another time!"
+	if player_credits == 0
+		puts "You've run out of credits."
 		exit 0
+	else
+		puts "Care to play a round of blackjack?"
+		if gets.chomp.downcase == "yes"
+			player_credits = place_a_wage(player_credits)
+		else
+			puts "Alright then, another time!"
+			exit 0
+		end
 	end	
 end
 
