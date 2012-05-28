@@ -1,4 +1,4 @@
-# Blackjack.rb version 1.1
+# Blackjack.rb version 1.2
 
 # Notes for future versions:
 # Add a wager system - make the game loop so long as the player has "credits" with which to wager
@@ -10,6 +10,10 @@
 # Will create wager-system outside, and have the round_of_blackjack method return some sort of
 # "win" or "loss" - based on what is returned, the player's credits will be doubled (what they bet x2)
 # otherwise, they lose their credits.
+
+# Currently stuck with getting the round_of_blackjack to return the appropriate result
+# After this has been resolved, then move onto: 1. updating player_credits, 2. looping play_again
+# as long as the player wants
 
 def round_of_blackjack
 	card_suits = [" of Diamonds", " of Clubs", " of Hearts", " of Spades"]
@@ -178,35 +182,83 @@ def round_of_blackjack
 		if player_has_blackjack == true && dealer_has_blackjack == false
 			# Player wins
 			puts "Your Blackjack trumps the dealer's #{dealers_hand}."
+			return "win"
 		elsif player_has_blackjack == false && dealer_has_blackjack == true
 			# Dealer wins
 			puts "The dealer's Blackjack trumps your #{players_final_hand}."
+			return "lose"
 		elsif player_has_blackjack == true && dealer_has_blackjack == true
 			# Blackjack tie
 			puts "Both you and the dealer have a Blackjack - it's a tie."
+			return "tie"
 		end
 
 	# Second, if no Blackjacks are in anyone's hand:
 	elsif players_score > dealers_score
 		puts "Your #{players_score} whomps the dealer's meager #{dealers_score}."
+		return "win"
 	elsif dealers_score > players_score
 		puts "The dealer's #{dealers_score} eats your #{players_score} for breakfast."
+		return "lose"
 	else
 		puts "It's a tie at #{players_score}."
+		return "tie"
 	end
 end
 
-puts "Care to play a round of blackjack?"
-if gets.chomp.downcase == "yes"
-	round_of_blackjack
-else
-	puts "Alright then, another time!"
+# Wager system:
+player_credits = 150
+
+def place_a_wage(player_credits)
+
+	def repeat_wager_req(player_credits)
+		puts "You currently have #{player_credits} credits."
+		puts "How many credits would you like to wager?"
+		player_bid = gets.chomp.to_i
+	end
+
+	player_credits = player_credits
+
+	player_bid = repeat_wager_req(player_credits)
+	until player_bid > 0 && player_bid <= player_credits
+		player_bid = repeat_wager_req(player_credits)
+	end
+	
+	round_of_blackjack_results = round_of_blackjack
+
+	if round_of_blackjack_results == "win"
+		puts "You won!  Your starting credits was: #{player_credits}"
+		player_credits += (player_bid * 2)
+		puts "Your bid was #{player_bid}.  Winning doubled your bid."
+		puts "Your total credits is now #{player_credits}."
+	elsif round_of_blackjack_results == "lose"
+		puts "You lost! Your starting credits was: #{player_credits}."
+		player_credits -= player_bid
+		puts "You have lost your bid of #{player_bid}."
+		puts "Your total credits is now #{player_credits}."
+	else
+		puts "It was a tie - you still have #{player_credits}."
+		# Tie - no change to player_credits
+	end
+	return player_credits
 end
 
+# I think I know a way to update player_credits - below, change place_a_wage(player_credits)
+# to player_credits = place_a_wage(player_credits)?
 
+# Then, remove return player_credits, above, and replace it with play_again(player_credits)?
 
+def play_again(player_credits)
+	puts "Care to play a round of blackjack?"
+	if gets.chomp.downcase == "yes"
+		place_a_wage(player_credits)
+	else
+		puts "Alright then, another time!"
+		exit 0
+	end	
+end
 
-
+play_again(player_credits)
 
 
 
