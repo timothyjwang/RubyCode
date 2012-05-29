@@ -1,28 +1,21 @@
-# Blackjack.rb version 1.3
+# Blackjack.rb version 1.4
 
-# Notes for future versions:
-# Add a wager system - make the game loop so long as the player has "credits" with which to wager
+# Notes on progress / current problems:
+	# No severe problems (game-breaking bugs, or errors) encountered.
+	# Program takes player's bid, and appropriately:
+		# Deducts it, if the player loses.
+		# Doubles it, and adds it to the player's credit-pool on a win.
+			# (ie, 150 starting credits, bid of 25, win = (25*2), post-round credits = 200)
+		# Makes no changes to player's credit-pool, and goes into another round on a tie.
 
-# Notes on progress:
-# Starting basic wager system
-# Basically just schlomped everything that already existed into one definition, round_of_blackjack.
+	# Have not personally had the luck of encountering any blackjacks during testing,
+		# Either by the player only, the dealer only, or both.  So, not sure if BJ's are working.
+			# But everything else seems to be fine, so I don't see what could go wrong...		
 
-# Will create wager-system outside, and have the round_of_blackjack method return some sort of
-# "win" or "loss" - based on what is returned, the player's credits will be doubled (what they bet x2)
-# otherwise, they lose their credits.
+def round_of_blackjack(player_credits, player_bid)
+	player_credits = player_credits
+	player_bid = player_bid
 
-# Currently stuck with getting the round_of_blackjack to return the appropriate result
-# After this has been resolved, then move onto: 1. updating player_credits, 2. looping play_again
-# as long as the player wants
-
-# Replaced place_a_wage(player_credits) with player_credits = place_a_wage(player_credits) - in method play_again
-# Removed return player_credits, and replace it with play_again(player_credits) - at the end of place_a_wage
-
-# Works well so far - losing games dedut the bid from the player's credits
-# However, if they player busts, the program exits - simple fix, if they player busts, deduct their bid from
-# the player's credits, and then place_a_wage(player_credits).
-
-def round_of_blackjack
 	card_suits = [" of Diamonds", " of Clubs", " of Hearts", " of Spades"]
 	card_values = ["Ace", 2, 3, 4, 5, 6, 7, 8, 9, 10, "Jack", "Queen", "King"]
 	def populate_deck(card_suits, card_values)
@@ -82,6 +75,25 @@ def round_of_blackjack
 		puts "Hit, or stay?"
 	end
 
+	# Results
+	def round_result(result, player_credits, player_bid)
+		result = result
+
+		if result == "win"
+			puts "You started with #{player_credits} credits, and your bid was #{player_bid}."
+			player_credits += (player_bid * 2)
+			puts "Winning doubled your bid."
+			play_again(player_credits)
+		elsif result == "lose"
+			puts "You lost your bid of #{player_bid} credits."
+			player_credits -= player_bid
+			play_again(player_credits)
+		else
+			puts "It's a tie.  Your bid has been returned."
+			play_again(player_credits)
+		end
+	end
+
 	def tell_player_hand_and_score(players_hand)
 		puts "Your hand contains: #{players_hand}."
 		puts "Your hand value is #{evaluate_hand_score(players_hand)}."
@@ -89,7 +101,7 @@ def round_of_blackjack
 		hand_value
 	end
 
-	def hit_loop(shuffled_deck, deck_index, players_hand)
+	def hit_loop(shuffled_deck, deck_index, players_hand, player_credits, player_bid)
 		shuffled_deck = shuffled_deck
 		deck_index = deck_index
 		players_hand = players_hand
@@ -106,8 +118,7 @@ def round_of_blackjack
 			busted = tell_player_hand_and_score(players_hand)
 			if busted > 21
 				puts "You busted."
-				round_result("lose")
-				play_again(player_credits)
+				round_result("lose", player_credits, player_bid)
 			else
 				hit_or_stay
 			end
@@ -161,7 +172,7 @@ def round_of_blackjack
 	# Player gets put into the hit_loop
 	# Cards are dealt on "hit," a score is kept, and the final results are saved in players_final_hand
 	# Also, save it out to an integer in players_score
-	players_final_hand = hit_loop(shuffled_deck, deck_index, players_hand)
+	players_final_hand = hit_loop(shuffled_deck, deck_index, players_hand, player_credits, player_bid)
 	players_score = evaluate_hand_score(players_final_hand)
 	player_has_blackjack = is_blackjack(players_final_hand)
 
@@ -179,46 +190,35 @@ def round_of_blackjack
 	# The dealer busts if over 21
 	if dealers_score > 21
 		puts "The dealer busts with #{dealers_score}."
-		exit 0
+		round_result("win", player_credits, player_bid)
 	end
 	dealer_has_blackjack = is_blackjack(dealers_hand)
-
-	# Results
-	def round_result(result)
-		result = result
-	end
 
 	# Final scoring
 	# First, does anyone have a Blackjack?
 	if player_has_blackjack == true || dealer_has_blackjack == true
 		# If one has a blackjack, and the other does not, it's an insta-win.
 		if player_has_blackjack == true && dealer_has_blackjack == false
-			# Player wins
 			puts "Your Blackjack trumps the dealer's #{dealers_hand}."
-			round_result("win")
+			round_result("win", player_credits, player_bid)
 		elsif player_has_blackjack == false && dealer_has_blackjack == true
-			# Dealer wins
 			puts "The dealer's Blackjack trumps your #{players_final_hand}."
-			round_result("lose")
+			round_result("lose", player_credits, player_bid)
 		elsif player_has_blackjack == true && dealer_has_blackjack == true
-			# Blackjack tie
-			puts "Both you and the dealer have a Blackjack - it's a tie."
-			round_result("tie")
+			puts "Both you and the dealer have a Blackjack."
+			round_result("tie", player_credits, player_bid)
 		end
 
 	# Second, if no Blackjacks are in anyone's hand:
 	elsif players_score > dealers_score
 		puts "Your #{players_score} whomps the dealer's meager #{dealers_score}."
-		round_result("win")
+		round_result("win", player_credits, player_bid)
 	elsif dealers_score > players_score
 		puts "The dealer's #{dealers_score} eats your #{players_score} for breakfast."
-		round_result("lose")
+		round_result("lose", player_credits, player_bid)
 	else
-		puts "It's a tie at #{players_score}."
-		round_result("tie")
+		round_result("tie", player_credits, player_bid)
 	end
-
-	round_result
 end
 
 # Wager system:
@@ -227,7 +227,6 @@ player_credits = 150
 def place_a_wage(player_credits)
 
 	def repeat_wager_req(player_credits)
-		puts "You currently have #{player_credits} credits."
 		puts "How many credits would you like to wager?"
 		player_bid = gets.chomp.to_i
 	end
@@ -239,24 +238,7 @@ def place_a_wage(player_credits)
 		player_bid = repeat_wager_req(player_credits)
 	end
 	
-	round_of_blackjack_results = round_of_blackjack
-
-	if round_of_blackjack_results == "win"
-		puts "You won!  Your starting credits was: #{player_credits}"
-		player_credits += (player_bid * 2)
-		puts "Your bid was #{player_bid}.  Winning doubled your bid."
-		puts "Your total credits is now #{player_credits}."
-	elsif round_of_blackjack_results == "lose"
-		puts "You lost! Your starting credits was: #{player_credits}."
-		player_credits -= player_bid
-		puts "You have lost your bid of #{player_bid}."
-		puts "Your total credits is now #{player_credits}."
-	else
-		puts "It was a tie - you still have #{player_credits}."
-		# Tie - no change to player_credits
-	end
-
-	play_again(player_credits)
+	round_of_blackjack_results = round_of_blackjack(player_credits, player_bid)
 end
 
 def play_again(player_credits)
@@ -264,7 +246,7 @@ def play_again(player_credits)
 		puts "You've run out of credits."
 		exit 0
 	else
-		puts "Care to play a round of blackjack?"
+		puts "Care to play a round of blackjack? You have #{player_credits} credits."
 		if gets.chomp.downcase == "yes"
 			player_credits = place_a_wage(player_credits)
 		else
@@ -275,23 +257,3 @@ def play_again(player_credits)
 end
 
 play_again(player_credits)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
