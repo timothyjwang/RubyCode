@@ -1,12 +1,6 @@
-# Blackjack.rb version 1.5
+# Blackjack.rb version 1.6
 
 # Notes on progress / current problems:
-	# Previously, attempts to bid were appropriatley rejected if it was an invalid amount (< 1, or > player_credits).
-	# However, player was not told why the bid was invalid.  Player is now told why their bid is invalid.
-
-	# Previously, on a winning hand, they player was simply told "Winning doubled your bid."
-	# Now, the program repeats the bid as a reference - also tells them their gains (player_bid * 2)
-
 	# Now, on a win, lose or tie, the player is shown the dealer's hand for that round.
 		# Still needs to be changed to have a nicer, non-array looking output
 		# use Array#join
@@ -27,10 +21,14 @@
 			# until get_chomp_down == "stay"
 		# ...to...
 			# until get_chomp_down == "stay" || tell_player_hand_and_score(players_hand) == 21
-		# Not sure if this works yet, but has its own problem
-
-	# Currently a problem with the dealer busting:
-		# `round_result': wrong number of arguments (3 for 4) (ArgumentError)
+		# First, this has its own problem:
+			# unless-loops with or's ( || ) are bothersome.  The above looks like:
+				# Your hand contains: ["7 of Hearts", "2 of Diamonds"].
+				# Your hand value is 9.
+				# Your hand contains: ["7 of Hearts", "2 of Diamonds", "King of Spades"].
+				# Your hand value is 19.
+				# Hit, or stay?
+		# Second, it doesn't even work - the player can still hit on a 21.
 
 	# Blackjacks not being considered?
 		# Care to play a round of blackjack? You have 150 credits.
@@ -49,6 +47,35 @@
 		# Care to play a round of blackjack? You have 140 credits.
 
 		# What alerted me to this issues was the absence of "The dealer's Blackjack trumps your #{players_final_hand}."
+
+		# Ah, good 'ol buddy Pry helped me figure out why this isn't working...
+		# First test:
+			# cards = ["Jack", "Ace"]
+			# => ["Jack", "Ace"]
+			# [4] pry(main)> cards.include?("Jack")
+			# => true
+			# [5] pry(main)> cards.include?("Ace")
+			# => true
+		# Second test:
+			# [6] pry(main)> cards = ["Jack of Waffles", "Ace of Mayonaise"]
+			# => ["Jack of Waffles", "Ace of Mayonaise"]
+			# [7] pry(main)> cards.include?("Jack")
+			# => false
+			# [8] pry(main)> cards.include?("Ace")
+			# => false
+		# .include? is looking for "Jack" or "Ace" specifically
+
+		# Thought - strip everything but "Jack" and "Ace" from the strings, THEN evaluate for blackjack?
+		# Alternate means - use a loop, similar to the hand-scoring system, to go through each object
+		# in the array, and see if it includes "Jack" or "Ace" - if both are present, it get's declared
+		# a blackjack.
+			# Decided to go down this route.
+
+			# After testing, it works (at least for the dealer's blackjacks):
+			# The dealer's Blackjack trumps your ["King of Diamonds", "7 of Spades"].
+			# This round, the dealer's hand contained: ["Jack of Diamonds", "Ace of Spades"].
+			# You lost your bid of 1 credits.
+			# Care to play a round of blackjack? You have 148 credits.
 
 def round_of_blackjack(player_credits, player_bid)
 	player_credits = player_credits
@@ -149,7 +176,7 @@ def round_of_blackjack(player_credits, player_bid)
 		dealers_hand = dealers_hand
 
 		hit_or_stay
-		until get_chomp_down == "stay"
+		until get_chomp_down == "stay" || tell_player_hand_and_score(players_hand) == 21
 			players_hand.push(shuffled_deck[deck_index])
 			deck_index += 1
 					
@@ -169,7 +196,7 @@ def round_of_blackjack(player_credits, player_bid)
 	end
 
 	def evaluate_hand_score(players_hand)
-		# First off, determine if the hand contains an Ace.
+		# Determine if the hand contains an Ace.
 		# If so, remove it from the array, and .push it to the last place.
 		y = 0        # indexing for the Ace-checking
 		while y < players_hand.length
@@ -203,8 +230,33 @@ def round_of_blackjack(player_credits, player_bid)
 		hand_score
 	end
 
-	def is_blackjack(hand_in_question)
-		if hand_in_question.include?("Ace") && hand_in_question.include?("Jack")
+	# Is infinitel-looping, somewhere...
+	def is_blackjack(hand)
+		x = 0     # Hand indexing
+		has_jack = false
+		has_ace = false
+
+		while x < hand.length
+			if hand[x].include?("Ace") == true
+				has_ace = true
+				x = hand.length
+			else
+				x += 1
+			end
+		end
+
+		x = 0     # Reset x
+
+		while x < hand.length
+			if hand[x].include?("Jack") == true
+				has_jack = true
+				x = hand.length
+			else
+				x += 1
+			end
+		end
+
+		if has_jack == true && has_ace == true
 			true
 		else
 			false
