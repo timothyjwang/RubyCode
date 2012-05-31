@@ -1,13 +1,6 @@
-# Blackjack.rb version 1.6
+# Blackjack.rb version 1.7
 
 # Notes on progress / current problems:
-	# Now, on a win, lose or tie, the player is shown the dealer's hand for that round.
-		# Still needs to be changed to have a nicer, non-array looking output
-		# use Array#join
-
-	# To-do, also have the player's hand display changed, as immediately above.
-		# use Array#join
-
 	# To-do, in play_again, the program will only go into a round of Blackjack on "yes."
 		# All else is considered a "no." Problematic, if someone were to mistype, or even
 		# submit an empty string.
@@ -29,53 +22,6 @@
 				# Your hand value is 19.
 				# Hit, or stay?
 		# Second, it doesn't even work - the player can still hit on a 21.
-
-	# Blackjacks not being considered?
-		# Care to play a round of blackjack? You have 150 credits.
-		# yes
-		# How many credits would you like to wager?
-		# 10
-		# You have been dealt: Queen of Diamonds.
-		# You have been dealt: 6 of Spades.
-		# The dealer has been dealt two cards.
-		# The dealer is showing: Jack of Diamonds.
-		# Hit, or stay?
-		# stay
-		# The dealer's 21 eats your 16 for breakfast.
-		# This round, the dealer's hand contained: ["Jack of Diamonds", "Ace of Spades"].
-		# You lost your bid of 10 credits.
-		# Care to play a round of blackjack? You have 140 credits.
-
-		# What alerted me to this issues was the absence of "The dealer's Blackjack trumps your #{players_final_hand}."
-
-		# Ah, good 'ol buddy Pry helped me figure out why this isn't working...
-		# First test:
-			# cards = ["Jack", "Ace"]
-			# => ["Jack", "Ace"]
-			# [4] pry(main)> cards.include?("Jack")
-			# => true
-			# [5] pry(main)> cards.include?("Ace")
-			# => true
-		# Second test:
-			# [6] pry(main)> cards = ["Jack of Waffles", "Ace of Mayonaise"]
-			# => ["Jack of Waffles", "Ace of Mayonaise"]
-			# [7] pry(main)> cards.include?("Jack")
-			# => false
-			# [8] pry(main)> cards.include?("Ace")
-			# => false
-		# .include? is looking for "Jack" or "Ace" specifically
-
-		# Thought - strip everything but "Jack" and "Ace" from the strings, THEN evaluate for blackjack?
-		# Alternate means - use a loop, similar to the hand-scoring system, to go through each object
-		# in the array, and see if it includes "Jack" or "Ace" - if both are present, it get's declared
-		# a blackjack.
-			# Decided to go down this route.
-
-			# After testing, it works (at least for the dealer's blackjacks):
-			# The dealer's Blackjack trumps your ["King of Diamonds", "7 of Spades"].
-			# This round, the dealer's hand contained: ["Jack of Diamonds", "Ace of Spades"].
-			# You lost your bid of 1 credits.
-			# Care to play a round of blackjack? You have 148 credits.
 
 def round_of_blackjack(player_credits, player_bid)
 	player_credits = player_credits
@@ -118,10 +64,9 @@ def round_of_blackjack(player_credits, player_bid)
 
 	players_hand = []
 	deal_card(players_hand, shuffled_deck, deck_index)
-	puts "You have been dealt: #{shuffled_deck[deck_index]}."
 	deck_index += 1
 	deal_card(players_hand, shuffled_deck, deck_index)
-	puts "You have been dealt: #{shuffled_deck[deck_index]}."
+	puts "You have been dealt two cards: #{players_hand.join(", ")}."
 	deck_index += 1
 
 	dealers_hand = []
@@ -129,8 +74,7 @@ def round_of_blackjack(player_credits, player_bid)
 	deck_index += 1
 	deal_card(dealers_hand, shuffled_deck, deck_index)
 	deck_index += 1
-	puts "The dealer has been dealt two cards."
-	puts "The dealer is showing: #{dealers_hand[1]}."
+	puts "The dealer has been dealt two cards, and is showing #{dealers_hand[1]}."
 
 	def get_chomp_down
 		input = gets.chomp.downcase
@@ -145,25 +89,25 @@ def round_of_blackjack(player_credits, player_bid)
 		result = result
 
 		if result == "win"
-			puts "This round, the dealer's hand contained: #{dealers_hand}."
+			puts "This round, the dealer's hand contained: #{dealers_hand.join(", ")}."
 			puts "You started with #{player_credits} credits, and your bid was #{player_bid}."
 			player_credits += (player_bid * 2)
 			puts "Winning doubled your bid, and earned you #{(player_bid * 2)} credits."
 			play_again(player_credits)
 		elsif result == "lose"
-			puts "This round, the dealer's hand contained: #{dealers_hand}."
+			puts "This round, the dealer's hand contained: #{dealers_hand.join(", ")}."
 			puts "You lost your bid of #{player_bid} credits."
 			player_credits -= player_bid
 			play_again(player_credits)
 		else
-			puts "This round, the dealer's hand contained: #{dealers_hand}."
+			puts "This round, the dealer's hand contained: #{dealers_hand.join(", ")}."
 			puts "It's a push.  Your #{player_bid} credit bid has been returned."
 			play_again(player_credits)
 		end
 	end
 
 	def tell_player_hand_and_score(players_hand)
-		puts "Your hand contains: #{players_hand}."
+		puts "Your hand contains: #{players_hand.join(", ")}."
 		puts "Your hand value is #{evaluate_hand_score(players_hand)}."
 		hand_value = evaluate_hand_score(players_hand)
 		hand_value
@@ -176,7 +120,7 @@ def round_of_blackjack(player_credits, player_bid)
 		dealers_hand = dealers_hand
 
 		hit_or_stay
-		until get_chomp_down == "stay" || tell_player_hand_and_score(players_hand) == 21
+		until get_chomp_down == "stay"
 			players_hand.push(shuffled_deck[deck_index])
 			deck_index += 1
 					
