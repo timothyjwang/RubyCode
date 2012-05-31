@@ -1,16 +1,54 @@
-# Blackjack.rb version 1.4
+# Blackjack.rb version 1.5
 
 # Notes on progress / current problems:
-	# No severe problems (game-breaking bugs, or errors) encountered.
-	# Program takes player's bid, and appropriately:
-		# Deducts it, if the player loses.
-		# Doubles it, and adds it to the player's credit-pool on a win.
-			# (ie, 150 starting credits, bid of 25, win = (25*2), post-round credits = 200)
-		# Makes no changes to player's credit-pool, and goes into another round on a tie.
+	# Previously, attempts to bid were appropriatley rejected if it was an invalid amount (< 1, or > player_credits).
+	# However, player was not told why the bid was invalid.  Player is now told why their bid is invalid.
 
-	# Have not personally had the luck of encountering any blackjacks during testing,
-		# Either by the player only, the dealer only, or both.  So, not sure if BJ's are working.
-			# But everything else seems to be fine, so I don't see what could go wrong...		
+	# Previously, on a winning hand, they player was simply told "Winning doubled your bid."
+	# Now, the program repeats the bid as a reference - also tells them their gains (player_bid * 2)
+
+	# Now, on a win, lose or tie, the player is shown the dealer's hand for that round.
+		# Still needs to be changed to have a nicer, non-array looking output
+		# use Array#join
+
+	# To-do, also have the player's hand display changed, as immediately above.
+		# use Array#join
+
+	# To-do, in play_again, the program will only go into a round of Blackjack on "yes."
+		# All else is considered a "no." Problematic, if someone were to mistype, or even
+		# submit an empty string.
+
+		# Incorporate an unless-check, which waits for either "yes" or "no" - nothing else will do
+
+	# Still have not incorporated anti-stupidity net, preventing a player from hitting when they have 21.
+		# Should probably do that...
+
+		# Changing...
+			# until get_chomp_down == "stay"
+		# ...to...
+			# until get_chomp_down == "stay" || tell_player_hand_and_score(players_hand) == 21
+		# Not sure if this works yet, but has its own problem
+
+	# Currently a problem with the dealer busting:
+		# `round_result': wrong number of arguments (3 for 4) (ArgumentError)
+
+	# Blackjacks not being considered?
+		# Care to play a round of blackjack? You have 150 credits.
+		# yes
+		# How many credits would you like to wager?
+		# 10
+		# You have been dealt: Queen of Diamonds.
+		# You have been dealt: 6 of Spades.
+		# The dealer has been dealt two cards.
+		# The dealer is showing: Jack of Diamonds.
+		# Hit, or stay?
+		# stay
+		# The dealer's 21 eats your 16 for breakfast.
+		# This round, the dealer's hand contained: ["Jack of Diamonds", "Ace of Spades"].
+		# You lost your bid of 10 credits.
+		# Care to play a round of blackjack? You have 140 credits.
+
+		# What alerted me to this issues was the absence of "The dealer's Blackjack trumps your #{players_final_hand}."
 
 def round_of_blackjack(player_credits, player_bid)
 	player_credits = player_credits
@@ -75,21 +113,24 @@ def round_of_blackjack(player_credits, player_bid)
 		puts "Hit, or stay?"
 	end
 
-	# Results
-	def round_result(result, player_credits, player_bid)
+	# Round result
+	def round_result(result, player_credits, player_bid, dealers_hand)
 		result = result
 
 		if result == "win"
+			puts "This round, the dealer's hand contained: #{dealers_hand}."
 			puts "You started with #{player_credits} credits, and your bid was #{player_bid}."
 			player_credits += (player_bid * 2)
-			puts "Winning doubled your bid."
+			puts "Winning doubled your bid, and earned you #{(player_bid * 2)} credits."
 			play_again(player_credits)
 		elsif result == "lose"
+			puts "This round, the dealer's hand contained: #{dealers_hand}."
 			puts "You lost your bid of #{player_bid} credits."
 			player_credits -= player_bid
 			play_again(player_credits)
 		else
-			puts "It's a tie.  Your bid has been returned."
+			puts "This round, the dealer's hand contained: #{dealers_hand}."
+			puts "It's a push.  Your #{player_bid} credit bid has been returned."
 			play_again(player_credits)
 		end
 	end
@@ -101,10 +142,11 @@ def round_of_blackjack(player_credits, player_bid)
 		hand_value
 	end
 
-	def hit_loop(shuffled_deck, deck_index, players_hand, player_credits, player_bid)
+	def hit_loop(shuffled_deck, deck_index, players_hand, player_credits, player_bid, dealers_hand)
 		shuffled_deck = shuffled_deck
 		deck_index = deck_index
 		players_hand = players_hand
+		dealers_hand = dealers_hand
 
 		hit_or_stay
 		until get_chomp_down == "stay"
@@ -118,7 +160,7 @@ def round_of_blackjack(player_credits, player_bid)
 			busted = tell_player_hand_and_score(players_hand)
 			if busted > 21
 				puts "You busted."
-				round_result("lose", player_credits, player_bid)
+				round_result("lose", player_credits, player_bid, dealers_hand)
 			else
 				hit_or_stay
 			end
@@ -172,7 +214,7 @@ def round_of_blackjack(player_credits, player_bid)
 	# Player gets put into the hit_loop
 	# Cards are dealt on "hit," a score is kept, and the final results are saved in players_final_hand
 	# Also, save it out to an integer in players_score
-	players_final_hand = hit_loop(shuffled_deck, deck_index, players_hand, player_credits, player_bid)
+	players_final_hand = hit_loop(shuffled_deck, deck_index, players_hand, player_credits, player_bid, dealers_hand)
 	players_score = evaluate_hand_score(players_final_hand)
 	player_has_blackjack = is_blackjack(players_final_hand)
 
@@ -190,42 +232,39 @@ def round_of_blackjack(player_credits, player_bid)
 	# The dealer busts if over 21
 	if dealers_score > 21
 		puts "The dealer busts with #{dealers_score}."
-		round_result("win", player_credits, player_bid)
+		round_result("win", player_credits, player_bid, dealers_hand)
 	end
 	dealer_has_blackjack = is_blackjack(dealers_hand)
 
 	# Final scoring
 	# First, does anyone have a Blackjack?
 	if player_has_blackjack == true || dealer_has_blackjack == true
-		# If one has a blackjack, and the other does not, it's an insta-win.
 		if player_has_blackjack == true && dealer_has_blackjack == false
 			puts "Your Blackjack trumps the dealer's #{dealers_hand}."
-			round_result("win", player_credits, player_bid)
+			round_result("win", player_credits, player_bid, dealers_hand)
 		elsif player_has_blackjack == false && dealer_has_blackjack == true
 			puts "The dealer's Blackjack trumps your #{players_final_hand}."
-			round_result("lose", player_credits, player_bid)
+			round_result("lose", player_credits, player_bid, dealers_hand)
 		elsif player_has_blackjack == true && dealer_has_blackjack == true
 			puts "Both you and the dealer have a Blackjack."
-			round_result("tie", player_credits, player_bid)
+			round_result("tie", player_credits, player_bid, dealers_hand)
 		end
 
 	# Second, if no Blackjacks are in anyone's hand:
 	elsif players_score > dealers_score
 		puts "Your #{players_score} whomps the dealer's meager #{dealers_score}."
-		round_result("win", player_credits, player_bid)
+		round_result("win", player_credits, player_bid, dealers_hand)
 	elsif dealers_score > players_score
 		puts "The dealer's #{dealers_score} eats your #{players_score} for breakfast."
-		round_result("lose", player_credits, player_bid)
+		round_result("lose", player_credits, player_bid, dealers_hand)
 	else
-		round_result("tie", player_credits, player_bid)
+		round_result("tie", player_credits, player_bid, dealers_hand)
 	end
 end
 
-# Wager system:
 player_credits = 150
 
 def place_a_wage(player_credits)
-
 	def repeat_wager_req(player_credits)
 		puts "How many credits would you like to wager?"
 		player_bid = gets.chomp.to_i
@@ -235,6 +274,11 @@ def place_a_wage(player_credits)
 
 	player_bid = repeat_wager_req(player_credits)
 	until player_bid > 0 && player_bid <= player_credits
+		if player_bid < 1
+			puts "You can't bid 0 or less!"
+		elsif player_bid > player_credits
+			puts "You can't bid more than you have!"
+		end
 		player_bid = repeat_wager_req(player_credits)
 	end
 	
