@@ -1,4 +1,4 @@
-# Blackjack.rb version 1.7
+# Blackjack.rb version 1.8
 
 # Notes on progress / current problems:
 	# To-do, in play_again, the program will only go into a round of Blackjack on "yes."
@@ -10,18 +10,70 @@
 	# Still have not incorporated anti-stupidity net, preventing a player from hitting when they have 21.
 		# Should probably do that...
 
-		# Changing...
-			# until get_chomp_down == "stay"
-		# ...to...
-			# until get_chomp_down == "stay" || tell_player_hand_and_score(players_hand) == 21
-		# First, this has its own problem:
-			# unless-loops with or's ( || ) are bothersome.  The above looks like:
-				# Your hand contains: ["7 of Hearts", "2 of Diamonds"].
-				# Your hand value is 9.
-				# Your hand contains: ["7 of Hearts", "2 of Diamonds", "King of Spades"].
-				# Your hand value is 19.
-				# Hit, or stay?
-		# Second, it doesn't even work - the player can still hit on a 21.
+		# On one potential fix:
+
+		# Care to play a round of blackjack? You have 150 credits.
+		# yes
+		# How many credits would you like to wager?
+		# 1
+		# You have been dealt two cards: 8 of Clubs, 4 of Spades.
+		# The dealer has been dealt two cards, and is showing Queen of Spades.
+		# Hit, or stay?
+		# hit
+		# You were dealt a 9 of Hearts, and your score is 21.
+		# Your 21 whomps the dealer's meager 19.
+		# This round, the dealer's hand contained: 9 of Diamonds, Queen of Spades.
+		# You started with 150 credits, and your bid was 1.
+		# Winning doubled your bid, and earned you 2 credits.
+		# Care to play a round of blackjack? You have 152 credits.
+		# yes
+		# How many credits would you like to wager?
+		# 1
+		# You have been dealt two cards: Ace of Diamonds, 10 of Diamonds.
+		# The dealer has been dealt two cards, and is showing 8 of Clubs.
+		# Hit, or stay?
+		# stay
+		# Your 21 whomps the dealer's meager 19.
+		# This round, the dealer's hand contained: 8 of Clubs, Ace of Spades.
+		# You started with 152 credits, and your bid was 1.
+		# Winning doubled your bid, and earned you 2 credits.
+		# Care to play a round of blackjack? You have 154 credits.
+			# ^ Two lucky tests in a row.  The first one is nice, and works.
+			# The second one, however, the ace was not evaluated as 11 (player hand the option to hit).
+
+		# Another test:
+			# You have been dealt two cards: 3 of Clubs, 4 of Hearts.
+			# The dealer has been dealt two cards, and is showing 8 of Hearts.
+			# Hit, or stay?
+			# hit
+			# Your hand contains: 3 of Clubs, 4 of Hearts, 2 of Diamonds.
+			# Your hand value is 9.
+			# Hit, or stay?
+			# hit
+			# Your hand contains: 3 of Clubs, 4 of Hearts, 2 of Diamonds, 2 of Spades.
+			# Your hand value is 11.
+			# Hit, or stay?
+			# hit
+			# You have a score of 21 with: 3 of Clubs, 4 of Hearts, 2 of Diamonds, 2 of Spades, Queen of Hearts.
+			# Your 21 whomps the dealer's meager 16.
+			# This round, the dealer's hand contained: 8 of Clubs, 8 of Hearts.
+			# You started with 146 credits, and your bid was 1.
+			# Winning doubled your bid, and earned you 2 credits.
+			# Care to play a round of blackjack? You have 148 credits.
+
+		# And another test:
+			# You have been dealt two cards: Ace of Hearts, Jack of Spades.
+			# The dealer has been dealt two cards, and is showing Jack of Diamonds.
+			# Hit, or stay?
+			# stay
+			# The dealer adds a 8 of Hearts to their hand.
+			# Your Blackjack trumps the dealer.
+			# This round, the dealer's hand contained: 2 of Hearts, Jack of Diamonds, 8 of Hearts.
+			# You started with 146 credits, and your bid was 1.
+			# Winning doubled your bid, and earned you 2 credits.
+			# Care to play a round of blackjack? You have 148 credits.
+
+		# Working when player hits towards a 21, but isn't working when their initial deal already == 21.
 
 def round_of_blackjack(player_credits, player_bid)
 	player_credits = player_credits
@@ -87,29 +139,30 @@ def round_of_blackjack(player_credits, player_bid)
 	# Round result
 	def round_result(result, player_credits, player_bid, dealers_hand)
 		result = result
+		tell_dealers_hand = puts "This round, the dealer's hand contained: #{dealers_hand.join(", ")}."
 
 		if result == "win"
-			puts "This round, the dealer's hand contained: #{dealers_hand.join(", ")}."
+			tell_dealers_hand
 			puts "You started with #{player_credits} credits, and your bid was #{player_bid}."
 			player_credits += (player_bid * 2)
 			puts "Winning doubled your bid, and earned you #{(player_bid * 2)} credits."
 			play_again(player_credits)
 		elsif result == "lose"
-			puts "This round, the dealer's hand contained: #{dealers_hand.join(", ")}."
+			tell_dealers_hand
 			puts "You lost your bid of #{player_bid} credits."
 			player_credits -= player_bid
 			play_again(player_credits)
 		else
-			puts "This round, the dealer's hand contained: #{dealers_hand.join(", ")}."
+			tell_dealers_hand
 			puts "It's a push.  Your #{player_bid} credit bid has been returned."
 			play_again(player_credits)
 		end
 	end
 
 	def tell_player_hand_and_score(players_hand)
-		puts "Your hand contains: #{players_hand.join(", ")}."
-		puts "Your hand value is #{evaluate_hand_score(players_hand)}."
 		hand_value = evaluate_hand_score(players_hand)
+		puts "Your hand contains: #{players_hand.join(", ")}."
+		puts "Your hand value is #{hand_value}."
 		hand_value
 	end
 
@@ -123,17 +176,23 @@ def round_of_blackjack(player_credits, player_bid)
 		until get_chomp_down == "stay"
 			players_hand.push(shuffled_deck[deck_index])
 			deck_index += 1
-					
-			# Busted?
-			# The following if/else will not return busted if score = 21 (as appropriate).
-			# Player can still choose to "hit." Incorporate anti-stupidity net by 
-			# automatically stopping if the score == 21?
-			busted = tell_player_hand_and_score(players_hand)
-			if busted > 21
-				puts "You busted."
-				round_result("lose", player_credits, player_bid, dealers_hand)
+
+			has_21 = evaluate_hand_score(players_hand)
+
+			# This will break the player out of the until-loop on a 21. Does not work in all situations.
+			# Uncomment the 3 lines below.
+			if has_21 == 21
+				puts "You have a score of 21 with: #{players_hand.join(", ")}."
+				break
 			else
-				hit_or_stay
+				# Busting
+				busted = tell_player_hand_and_score(players_hand)
+				if busted > 21
+					puts "You busted."
+					round_result("lose", player_credits, player_bid, dealers_hand)
+				else
+					hit_or_stay
+				end
 			end
 		end
 		players_hand
@@ -215,7 +274,7 @@ def round_of_blackjack(player_credits, player_bid)
 	player_has_blackjack = is_blackjack(players_final_hand)
 
 	# The dealers turn
-	# First off, update deck_index to be the sum of dealers_hand + however many cards are in players_final_hand
+	# First off, update deck_index
 	deck_index = players_final_hand.length + dealers_hand.length
 
 	# Until the value of dealers_hand > 15, they hit
@@ -236,10 +295,10 @@ def round_of_blackjack(player_credits, player_bid)
 	# First, does anyone have a Blackjack?
 	if player_has_blackjack == true || dealer_has_blackjack == true
 		if player_has_blackjack == true && dealer_has_blackjack == false
-			puts "Your Blackjack trumps the dealer's #{dealers_hand}."
+			puts "Your Blackjack trumps the dealer."
 			round_result("win", player_credits, player_bid, dealers_hand)
 		elsif player_has_blackjack == false && dealer_has_blackjack == true
-			puts "The dealer's Blackjack trumps your #{players_final_hand}."
+			puts "The dealer's Blackjack trumps your hand."
 			round_result("lose", player_credits, player_bid, dealers_hand)
 		elsif player_has_blackjack == true && dealer_has_blackjack == true
 			puts "Both you and the dealer have a Blackjack."
