@@ -1,58 +1,13 @@
-# Blackjack.rb version 2.2
+# Blackjack.rb version 2.3
 
 # Notes on progress / current problems:
 	# To-do, in play_again, the program will only go into a round of Blackjack on "yes."
 		# All else is considered a "no." Problematic, if someone were to mistype, or even
 		# submit an empty string.
-
+		
 		# Incorporate an unless-check, which waits for either "yes" or "no" - nothing else will do
 
-	# Next problem:
-		# Care to play a round of blackjack? You have 170 credits.
-		# yes
-		# How many credits would you like to wager?
-		# 10
-		# You have been dealt two cards: Ace of Clubs, 8 of Clubs.
-		# The dealer has been dealt two cards, and is showing 8 of Spades.
-		# Hit, or stay?
-		# hit
-		# Your hand contains: 8 of Clubs, Jack of Diamonds, Ace of Clubs.
-		# Your hand value is 19.
-		# Hit, or stay?
-		# stay
-		# Your Blackjack trumps the dealer.
-		# This round, the dealer's hand contained: King of Diamonds, 8 of Spades.
-		# You started with 170 credits, and your bid was 10.
-		# Winning doubled your bid, and earned you 20 credits.
-		# Care to play a round of blackjack? You have 190 credits.
-
-	# Player's hand is considered a blackjack even though it contains more than just a jack + ace
-		# Quick fix, check if hand contains jack + ace, AND hand.length == 2?
-
-	# Made a simple change to the blackjack-check:
-		# if has_jack == true && has_ace == true
-	# ...is now:
-		# if has_jack == true && has_ace == true && hand.length == 2
-
-	# Test:
-		# Care to play a round of blackjack? You have 285 credits.
-		# yes
-		# How many credits would you like to wager?
-		# 25
-		# You have been dealt two cards: 5 of Diamonds, Ace of Hearts.
-		# The dealer has been dealt two cards, and is showing Jack of Diamonds.
-		# Hit, or stay?
-		# hit
-		# Your hand contains: 5 of Diamonds, Jack of Clubs, Ace of Hearts.
-		# Your hand value is 16.
-		# Hit, or stay?
-		# stay
-		# The dealer's 19 eats your 16 for breakfast.
-		# This round, the dealer's hand contained: 9 of Diamonds, Jack of Diamonds.
-		# You lost your bid of 25 credits.
-		# Care to play a round of blackjack? You have 260 credits.
-
-	# Yays!
+		# Now includes an until-check, to wait for a yes/no from the player in play_again (will_player_play)
 
 def round_of_blackjack(player_credits, player_bid)
 	player_credits = player_credits
@@ -332,12 +287,19 @@ def play_again(player_credits)
 		exit 0
 	else
 		puts "Care to play a round of blackjack? You have #{player_credits} credits."
-		if gets.chomp.downcase == "yes"
-			player_credits = place_a_wage(player_credits)
-		else
-			puts "Alright then, another time!"
-			exit 0
+
+		will_player_play = gets.chomp.downcase
+		until will_player_play == "yes"
+			if will_player_play == "no"
+				puts "Alright then, another time!"
+				exit 0
+			else
+				puts "Was expecting yes/no."
+				will_player_play = gets.chomp.downcase
+			end
 		end
+
+		player_credits = place_a_wage(player_credits)
 	end	
 end
 
