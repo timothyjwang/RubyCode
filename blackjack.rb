@@ -1,4 +1,4 @@
-# Blackjack.rb version 2.1
+# Blackjack.rb version 2.2
 
 # Notes on progress / current problems:
 	# To-do, in play_again, the program will only go into a round of Blackjack on "yes."
@@ -7,73 +7,52 @@
 
 		# Incorporate an unless-check, which waits for either "yes" or "no" - nothing else will do
 
-	# Still have not incorporated anti-stupidity net, preventing a player from hitting when they have 21.
-		# Should probably do that...
-
-		# On one potential fix:
-
-		# Care to play a round of blackjack? You have 150 credits.
+	# Next problem:
+		# Care to play a round of blackjack? You have 170 credits.
 		# yes
 		# How many credits would you like to wager?
-		# 1
-		# You have been dealt two cards: 8 of Clubs, 4 of Spades.
-		# The dealer has been dealt two cards, and is showing Queen of Spades.
+		# 10
+		# You have been dealt two cards: Ace of Clubs, 8 of Clubs.
+		# The dealer has been dealt two cards, and is showing 8 of Spades.
 		# Hit, or stay?
 		# hit
-		# You were dealt a 9 of Hearts, and your score is 21.
-		# Your 21 whomps the dealer's meager 19.
-		# This round, the dealer's hand contained: 9 of Diamonds, Queen of Spades.
-		# You started with 150 credits, and your bid was 1.
-		# Winning doubled your bid, and earned you 2 credits.
-		# Care to play a round of blackjack? You have 152 credits.
-		# yes
-		# How many credits would you like to wager?
-		# 1
-		# You have been dealt two cards: Ace of Diamonds, 10 of Diamonds.
-		# The dealer has been dealt two cards, and is showing 8 of Clubs.
+		# Your hand contains: 8 of Clubs, Jack of Diamonds, Ace of Clubs.
+		# Your hand value is 19.
 		# Hit, or stay?
 		# stay
-		# Your 21 whomps the dealer's meager 19.
-		# This round, the dealer's hand contained: 8 of Clubs, Ace of Spades.
-		# You started with 152 credits, and your bid was 1.
-		# Winning doubled your bid, and earned you 2 credits.
-		# Care to play a round of blackjack? You have 154 credits.
-			# ^ Two lucky tests in a row.  The first one is nice, and works.
-			# The second one, however, the ace was not evaluated as 11 (player hand the option to hit).
+		# Your Blackjack trumps the dealer.
+		# This round, the dealer's hand contained: King of Diamonds, 8 of Spades.
+		# You started with 170 credits, and your bid was 10.
+		# Winning doubled your bid, and earned you 20 credits.
+		# Care to play a round of blackjack? You have 190 credits.
 
-		# Another test:
-			# You have been dealt two cards: 3 of Clubs, 4 of Hearts.
-			# The dealer has been dealt two cards, and is showing 8 of Hearts.
-			# Hit, or stay?
-			# hit
-			# Your hand contains: 3 of Clubs, 4 of Hearts, 2 of Diamonds.
-			# Your hand value is 9.
-			# Hit, or stay?
-			# hit
-			# Your hand contains: 3 of Clubs, 4 of Hearts, 2 of Diamonds, 2 of Spades.
-			# Your hand value is 11.
-			# Hit, or stay?
-			# hit
-			# You have a score of 21 with: 3 of Clubs, 4 of Hearts, 2 of Diamonds, 2 of Spades, Queen of Hearts.
-			# Your 21 whomps the dealer's meager 16.
-			# This round, the dealer's hand contained: 8 of Clubs, 8 of Hearts.
-			# You started with 146 credits, and your bid was 1.
-			# Winning doubled your bid, and earned you 2 credits.
-			# Care to play a round of blackjack? You have 148 credits.
+	# Player's hand is considered a blackjack even though it contains more than just a jack + ace
+		# Quick fix, check if hand contains jack + ace, AND hand.length == 2?
 
-		# And another test:
-			# You have been dealt two cards: Ace of Hearts, Jack of Spades.
-			# The dealer has been dealt two cards, and is showing Jack of Diamonds.
-			# Hit, or stay?
-			# stay
-			# The dealer adds a 8 of Hearts to their hand.
-			# Your Blackjack trumps the dealer.
-			# This round, the dealer's hand contained: 2 of Hearts, Jack of Diamonds, 8 of Hearts.
-			# You started with 146 credits, and your bid was 1.
-			# Winning doubled your bid, and earned you 2 credits.
-			# Care to play a round of blackjack? You have 148 credits.
+	# Made a simple change to the blackjack-check:
+		# if has_jack == true && has_ace == true
+	# ...is now:
+		# if has_jack == true && has_ace == true && hand.length == 2
 
-		# Working when player hits towards a 21, but isn't working when their initial deal already == 21.
+	# Test:
+		# Care to play a round of blackjack? You have 285 credits.
+		# yes
+		# How many credits would you like to wager?
+		# 25
+		# You have been dealt two cards: 5 of Diamonds, Ace of Hearts.
+		# The dealer has been dealt two cards, and is showing Jack of Diamonds.
+		# Hit, or stay?
+		# hit
+		# Your hand contains: 5 of Diamonds, Jack of Clubs, Ace of Hearts.
+		# Your hand value is 16.
+		# Hit, or stay?
+		# stay
+		# The dealer's 19 eats your 16 for breakfast.
+		# This round, the dealer's hand contained: 9 of Diamonds, Jack of Diamonds.
+		# You lost your bid of 25 credits.
+		# Care to play a round of blackjack? You have 260 credits.
+
+	# Yays!
 
 def round_of_blackjack(player_credits, player_bid)
 	player_credits = player_credits
@@ -260,7 +239,7 @@ def round_of_blackjack(player_credits, player_bid)
 			end
 		end
 
-		if has_jack == true && has_ace == true
+		if has_jack == true && has_ace == true && hand.length == 2
 			true
 		else
 			false
@@ -270,43 +249,15 @@ def round_of_blackjack(player_credits, player_bid)
 	# Player gets put into the hit_loop
 	# Cards are dealt on "hit," a score is kept, and the final results are saved in players_final_hand
 	# Also, save it out to an integer in players_score
-
-	# Commenting out these 3 lines at first, as a test:
-	# players_final_hand = hit_loop(shuffled_deck, deck_index, players_hand, player_credits, player_bid, dealers_hand)
-	# players_score = evaluate_hand_score(players_final_hand)
-	# player_has_blackjack = is_blackjack(players_final_hand)
-
-	# Testing the following lines - supposedly, should not put player into hit_loop if they already have 21:
 	if evaluate_hand_score(players_hand) == 21
+		# If player's initial hand == 21, they are not put into the hit_loop
 		puts "You have a score of 21 with: #{players_hand.join(", ")}."
 		players_final_hand = players_hand
 	else
 		players_final_hand = hit_loop(shuffled_deck, deck_index, players_hand, player_credits, player_bid, dealers_hand)
 	end
-
 	players_score = evaluate_hand_score(players_final_hand)
 	player_has_blackjack = is_blackjack(players_final_hand)
-
-	# Yay!  A problem:
-		# You have been dealt two cards: Ace of Hearts, Queen of Spades.
-		# The dealer has been dealt two cards, and is showing 10 of Spades.
-		# blackjack.rb:206:in `evaluate_hand_score': undefined method `length' for nil:NilClass (NoMethodError)
-	# Probably because line 287 was trying to call evaluate_hand_score with players_final_hand - but
-	# players_final_hand didn't exist, because it only gets created in the else-portion of the if/else.  Derp.
-
-	# Added lines 281 & 282.  Now testing fix.
-		# You have been dealt two cards: Jack of Hearts, Ace of Clubs.
-		# The dealer has been dealt two cards, and is showing 8 of Diamonds.
-		# You have a score of 21 with: Jack of Hearts, Ace of Clubs.
-		# The dealer adds a 6 of Hearts to their hand.
-		# Your Blackjack trumps the dealer.
-		# This round, the dealer's hand contained: 4 of Diamonds, 8 of Diamonds, 6 of Hearts.
-		# You started with 156 credits, and your bid was 1.
-		# Winning doubled your bid, and earned you 2 credits.
-		# Care to play a round of blackjack? You have 158 credits.
-	# Well...extremely, obnoxiously wordy, but it works - they player is not put into the hit_loop.
-
-
 
 	# The dealers turn
 	# First off, update deck_index
