@@ -1,13 +1,7 @@
-# Blackjack.rb version 2.3
+# Blackjack.rb version 3.0
 
 # Notes on progress / current problems:
-	# To-do, in play_again, the program will only go into a round of Blackjack on "yes."
-		# All else is considered a "no." Problematic, if someone were to mistype, or even
-		# submit an empty string.
-		
-		# Incorporate an unless-check, which waits for either "yes" or "no" - nothing else will do
-
-		# Now includes an until-check, to wait for a yes/no from the player in play_again (will_player_play)
+	# Cleared out some notes; added / clarified other notes.
 
 def round_of_blackjack(player_credits, player_bid)
 	player_credits = player_credits
@@ -70,7 +64,6 @@ def round_of_blackjack(player_credits, player_bid)
 		puts "Hit, or stay?"
 	end
 
-	# Round result
 	def round_result(result, player_credits, player_bid, dealers_hand)
 		result = result
 		tell_dealers_hand = puts "This round, the dealer's hand contained: #{dealers_hand.join(", ")}."
@@ -113,10 +106,8 @@ def round_of_blackjack(player_credits, player_bid)
 
 			has_21 = evaluate_hand_score(players_hand)
 
-			# This will break the player out of the until-loop on a 21. Only works in situations where
-				# the user hits towards 21, but not if their initial deal == 21.
-			# Uncomment the 3 lines below.
 			if has_21 == 21
+				# Break player out of until-loop when they hit towards 21
 				puts "You have a score of 21 with: #{players_hand.join(", ")}."
 				break
 			else
@@ -134,8 +125,9 @@ def round_of_blackjack(player_credits, player_bid)
 	end
 
 	def evaluate_hand_score(players_hand)
-		# Determine if the hand contains an Ace.
-		# If so, remove it from the array, and .push it to the last place.
+		# Determine if the hand contains an Ace
+		# If so, remove it from the array, and .push it to the last place
+		# This way, Aces get evaluated last (11 or 1)
 		y = 0        # indexing for the Ace-checking
 		while y < players_hand.length
 			if players_hand[y].include?("Ace")
@@ -168,7 +160,6 @@ def round_of_blackjack(player_credits, player_bid)
 		hand_score
 	end
 
-	# Is infinitel-looping, somewhere...
 	def is_blackjack(hand)
 		x = 0     # Hand indexing
 		has_jack = false
@@ -201,17 +192,18 @@ def round_of_blackjack(player_credits, player_bid)
 		end
 	end
 
-	# Player gets put into the hit_loop
-	# Cards are dealt on "hit," a score is kept, and the final results are saved in players_final_hand
-	# Also, save it out to an integer in players_score
 	if evaluate_hand_score(players_hand) == 21
 		# If player's initial hand == 21, they are not put into the hit_loop
 		puts "You have a score of 21 with: #{players_hand.join(", ")}."
 		players_final_hand = players_hand
 	else
+		# Player gets put into the hit_loop
+		# Cards are dealt on "hit," a score is kept, and the final results are saved in players_final_hand
 		players_final_hand = hit_loop(shuffled_deck, deck_index, players_hand, player_credits, player_bid, dealers_hand)
 	end
+	# Save score as an integer in players_score
 	players_score = evaluate_hand_score(players_final_hand)
+	# Determine if the player's hand is a blackjack
 	player_has_blackjack = is_blackjack(players_final_hand)
 
 	# The dealers turn
