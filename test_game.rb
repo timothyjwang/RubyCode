@@ -66,9 +66,8 @@ def main_prompt
 	elsif user_input == 2
 		monster_whacking_time
 	elsif user_input == 3
-		puts "You are level #{The_Player.level}, with #{The_Player.current_experience} / #{The_Player.exp_to_next_level} experience."
-		puts "You have #{The_Player.current_health} / #{The_Player.max_health} health."
-		puts "You have #{The_Player.current_mana} / #{The_Player.max_mana} mana."
+		puts "You are level #{The_Player.level}, with #{The_Player.current_experience}/#{The_Player.exp_to_next_level} experience."
+		puts "You have #{The_Player.current_health}/#{The_Player.max_health} health, and #{The_Player.current_mana}/#{The_Player.max_mana} mana."
 		puts "You have #{The_Player.strength} strength, #{The_Player.intelligence} intelligence, and #{The_Player.endurance} endurance."
 		main_prompt
 	else
@@ -78,6 +77,48 @@ def main_prompt
 end
 
 def monster_whacking_time
+	def random_monster_generator(diff)
+		gen_num = (1 + rand(3))
+
+		if diff == "wimpy"
+			wimpy_monsters(gen_num)
+		elsif diff == "regular"
+			regular_monsters(gen_num)
+		else
+			challenging_monsters(gen_num)
+		end
+	end
+
+	def wimpy_monsters(num)
+		if num == 1
+			puts "You encounter a Giant Rat!"
+		elsif num == 2
+			puts "You encounter a Goblin!"
+		else
+			puts "You encounter a Forlorn Ghost!"
+		end
+	end
+
+	def regular_monsters(num)
+		if num == 1
+			puts "You encounter a Scorpion!"
+		elsif num == 2
+			puts "You encounter a Harpy!"
+		else
+			puts "You encounter an Angry Horse Hell-Bent On Avenging His Sister Who Was Sent To A Glue Factory!"
+		end
+	end
+
+	def challenging_monsters(num)
+		if num == 1
+			puts "You encounter a Minotaur!"
+		elsif num == 2
+			puts "You encounter a Frost Dragon!"
+		else
+			puts "You encounter an Insurance Salesman!"
+		end
+	end
+
 	puts "What kind of monsters are you looking for?"
 	puts "1. Wimpy monsters.           2. Regular monsters."
 	puts "3. Challenging monsters.     4. Return to town."
@@ -95,52 +136,6 @@ def monster_whacking_time
 	else
 		puts "Was expecting an integer (1-4)."
 		monster_whacking_time
-	end
-
-
-
-	def random_monster_generator(diff)
-		gen_num = (1 + rand(3))
-
-		if difficulty == "wimpy"
-			wimpy_monsters(gen_num)
-		elsif diff == "regular"
-			regular_monsters(gen_num)
-		else
-			challenging_monsters(gen_num)
-		end
-	end
-
-
-
-	def wimpy_monsters(num)
-		if num == 1
-			puts "You encounter a Giant Rat!"
-		elsif num == 2
-			puts "You encounter a Goblin!"
-		else
-			puts "You encounter a Forlorn Ghost!"
-		end
-	end
-
-	def regular_monsters(number)
-		if num == 1
-			puts "You encounter a Scorpion!"
-		elsif num == 2
-			puts "You encounter a Harpy!"
-		else
-			puts "You encounter an Angry Horse Hell-Bent On Avenging His Sister Who Was Sent To A Glue Factory!"
-		end
-	end
-
-	def challenging_monsters(number)
-		if num == 1
-			puts "You encounter a Minotaur!"
-		elsif num == 2
-			puts "You encounter a Frost Dragon!"
-		else
-			puts "You encounter an Insurance Salesman!"
-		end
 	end
 end
 
