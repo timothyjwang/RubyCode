@@ -28,11 +28,15 @@ class Clock
     @hour_range = []
 
     x.times do |i|
-      @hour_range << i
+      @hour_range << (i + 1)
     end
 
     @starting_hour = @hour_range.last
     @hour_now = @starting_hour
+  end
+
+  def hour_range
+    puts @hour_range.join(", ")
   end
 
   def hour_now
@@ -50,10 +54,40 @@ class Clock
   puts @hour_now
   end
 
-  # def next_hour
-  #   @hour_now = @hour_range[ % @hour_range.length]
-  #   puts @hour_now
-  # end
+  def next_hour
+    x = 0
+    until x == @hour_now
+      x += 1
+    end
+    if @hour_now == (@hour_range.length)
+      @hour_now = @hour_range[0]
+    else
+      @hour_now = @hour_range[x + 1]
+    end
+    puts @hour_now
+  end
 end
 
+# Possible change:
+# As is, numbers get added starting from index 0 (a 5-hour-clock would be hours 0 - 4).
+# This is because of line 31's @hour_range << i.
+# If we wanted to do a 1-n range, change line 31 to read: @hour_range << (i + 1)
+# AND, on line 58, change: if @hour_now == (@hour_range.length - 1)
+# ...to: if @hour_now == @hour_range.length
+
+# Test time!
+
 five_hour_clock = Clock.new(5)
+five_hour_clock.next_hour
+five_hour_clock.next_hour
+five_hour_clock.next_hour
+five_hour_clock.next_hour
+five_hour_clock.next_hour
+
+# Uh oh...this came up with:
+# 1
+# 3
+# 5
+# 1
+# 3
+# To-do, re-check next_hour
