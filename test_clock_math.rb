@@ -62,7 +62,7 @@ class Clock
     if @hour_now == (@hour_range.length)
       @hour_now = @hour_range[0]
     else
-      @hour_now = @hour_range[x + 1]
+      @hour_now = @hour_range[x]
     end
     puts @hour_now
   end
@@ -90,4 +90,6 @@ five_hour_clock.next_hour
 # 5
 # 1
 # 3
-# To-do, re-check next_hour
+# After a quick check - derp. Line 65, change: @hour_now = @hour_range[x + 1]
+# ...to: @hour_now = @hour_range[x]
+# Aaaaand, yay. Working.
