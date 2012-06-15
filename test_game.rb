@@ -4,54 +4,62 @@
 
 
 # Current notes/problems:
-
+	# Will eventually split Player into it's own class, and various monsters into their own.
 
 
 class The_Player
-	@@level = 1
+	def initialize
+		@level = 1
 
-	@@current_health = 10
-	@@max_health = 10
-	@@current_mana = 10
-	@@max_mana = 10
-	@@strength = 1
-	@@intelligence = 1
-	@@endurance = 1
+		@current_health = 10
+		@max_health = 10
+		@current_mana = 10
+		@max_mana = 10
+		@strength = 1
+		@intelligence = 1
+		@endurance = 1
 
-	@@current_experience = 0
-	@@exp_to_next_level = (@@level * 10)
+		@current_experience = 0
+		@exp_to_next_level = (@level * 10)
+	end
 
 	def self.level
-		@@level
+		@level
 	end
 
 	def self.current_health
-		@@current_health
+		@current_health
 	end
 	def self.max_health
-		@@max_health
+		@max_health
 	end
 	def self.current_mana
-		@@current_mana
+		@current_mana
 	end
 	def self.max_mana
-		@@max_mana
+		@max_mana
 	end
 	def self.strength
-		@@strength
+		@strength
 	end
 	def self.intelligence
-		@@intelligence
+		@intelligence
 	end
 	def self.endurance
-		@@endurance
+		@endurance
 	end
 
 	def self.current_experience
-		@@current_experience
+		@current_experience
 	end
 	def self.exp_to_next_level
-		@@exp_to_next_level
+		@exp_to_next_level
+	end
+
+	def exp_after_battle(exp)
+		if @current_experience >= @exp_to_next_level
+			@level += 1
+			puts "You've gained enough experience to advance to level #{@level}!"
 	end
 end
 
@@ -77,7 +85,7 @@ def main_prompt
 end
 
 def monster_whacking_time
-	def random_monster_generator(diff)
+	def monster_generator(diff)
 		gen_num = (1 + rand(3))
 
 		if diff == "wimpy"
@@ -92,10 +100,19 @@ def monster_whacking_time
 	def wimpy_monsters(num)
 		if num == 1
 			puts "You encounter a Giant Rat!"
+			puts "You kicked the Giant Rat's butt, earning you 10 experience!"
+			The_Player.current_experience += 10
+			main_prompt
 		elsif num == 2
 			puts "You encounter a Goblin!"
+			puts "You kicked the Goblin's butt, earning you 10 experience!"
+			The_Player.current_experience += 10
+			main_prompt
 		else
 			puts "You encounter a Forlorn Ghost!"
+			puts "You kicked the Forlorn Ghost's butt, earning you 10 experience!"
+			The_Player.current_experience += 10
+			main_prompt
 		end
 	end
 
@@ -126,11 +143,11 @@ def monster_whacking_time
 	user_input = gets.chomp.to_i
 
 	if user_input == 1
-		random_monster_generator("wimpy")
+		monster_generator("wimpy")
 	elsif user_input == 2
-		random_monster_generator("regular")
+		monster_generator("regular")
 	elsif user_input == 3
-		random_monster_generator("challenging")
+		monster_generator("challenging")
 	elsif user_input == 4
 		main_prompt
 	else
