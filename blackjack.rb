@@ -1,8 +1,6 @@
 # Blackjack.rb version 3.0
 
 # Notes on progress / current problems:
-  # Cleared out some notes; added / clarified other notes.
-
   # Your hand contains: Jack of Clubs, Ace of Spades, Ace of Clubs.
   # Your hand value is 22.
   # You busted.
