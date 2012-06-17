@@ -3,6 +3,11 @@
 # Notes on progress / current problems:
   # Cleared out some notes; added / clarified other notes.
 
+  # Your hand contains: Jack of Clubs, Ace of Spades, Ace of Clubs.
+  # Your hand value is 22.
+  # You busted.
+  # ^ Probably going to want to fix that...
+
   def round_of_blackjack(player_credits, player_bid)
     player_credits = player_credits
     player_bid = player_bid
