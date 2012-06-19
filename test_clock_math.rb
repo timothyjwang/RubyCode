@@ -57,15 +57,7 @@ class Clock_a
   end
 
   def next_hour
-    x = 0
-    until x == @hour_now
-      x += 1
-    end
-    if @hour_now == (@hour_range.length - 1)
-      @hour_now = @hour_range[0]
-    else
-      @hour_now = @hour_range[x + 1]
-    end
+    @hour_now = @hour_range[(@hour_now + 1) % @hour_range.length]
     puts @hour_now
   end
 end
@@ -116,6 +108,19 @@ class Clock_b
     puts @hour_now
   end
 end
+
+five_hour_clock = Clock_a.new(5)
+five_hour_clock.hour_range
+five_hour_clock.hour_now
+five_hour_clock.pass_time(4)
+five_hour_clock.reset!
+five_hour_clock.next_hour
+five_hour_clock.next_hour
+five_hour_clock.next_hour
+five_hour_clock.next_hour
+five_hour_clock.next_hour
+
+puts
 
 five_hour_clock = Clock_b.new(5)
 five_hour_clock.hour_range
