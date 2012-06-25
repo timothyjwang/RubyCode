@@ -5,6 +5,14 @@
   # Your hand value is 22.
   # You busted.
   # ^ Probably going to want to fix that...
+  
+    # Possible resolution: initially declare all Aces == 11, and then evaulate individually.
+    # Example: Jack of Clubs, Ace of Spades, Ace of Clubs == 32.
+    # Does it result in a bust? Yes. Does it contain an Ace? Yes.
+    # Reduce the value of one Ace by 10. 32 => 22.
+    # Does it result in a bust? Yes. Does it contain any Aces beyond the first? Yes.
+    # Reduce the value of that second Ace by 10. 22 => 12.
+    # Etc...
 
   def round_of_blackjack(player_credits, player_bid)
     player_credits = player_credits
