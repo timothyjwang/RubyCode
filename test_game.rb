@@ -4,8 +4,9 @@
 
 
 # Current notes/problems:
-	# Will eventually split Player into it's own class, and various monsters into their own.
-
+	# Will eventually split Player into it's own class,
+	# various monsters into their own class,
+	# the shop, its own - etc...
 
 class The_Player
 	def initialize
@@ -60,10 +61,15 @@ class The_Player
 		if @current_experience >= @exp_to_next_level
 			@level += 1
 			puts "You've gained enough experience to advance to level #{@level}!"
+		end
 	end
 end
 
 def main_prompt
+	def initialize
+		@player = The_Player.new
+	end
+
 	puts "What would you like to do?"
 	puts "1. Visit the store.     2. Go whack some monsters.     3. Check stats."
 
@@ -74,9 +80,9 @@ def main_prompt
 	elsif user_input == 2
 		monster_whacking_time
 	elsif user_input == 3
-		puts "You are level #{The_Player.level}, with #{The_Player.current_experience}/#{The_Player.exp_to_next_level} experience."
-		puts "You have #{The_Player.current_health}/#{The_Player.max_health} health, and #{The_Player.current_mana}/#{The_Player.max_mana} mana."
-		puts "You have #{The_Player.strength} strength, #{The_Player.intelligence} intelligence, and #{The_Player.endurance} endurance."
+		puts "You are level #{@player.level}, with #{@player.current_experience}/#{@player.exp_to_next_level} experience."
+		puts "You have #{@player.current_health}/#{@player.max_health} health, and #{@player.current_mana}/#{@player.max_mana} mana."
+		puts "You have #{@player.strength} strength, #{@player.intelligence} intelligence, and #{@player.endurance} endurance."
 		main_prompt
 	else
 		puts "Was expecting an integer (1-3)."
@@ -101,38 +107,44 @@ def monster_whacking_time
 		if num == 1
 			puts "You encounter a Giant Rat!"
 			puts "You kicked the Giant Rat's butt, earning you 10 experience!"
-			The_Player.current_experience += 10
-			main_prompt
+			@player.current_experience += 10
+			fight_time("giant_rat")
 		elsif num == 2
 			puts "You encounter a Goblin!"
 			puts "You kicked the Goblin's butt, earning you 10 experience!"
-			The_Player.current_experience += 10
-			main_prompt
+			@player.current_experience += 10
+			fight_time("goblin")
 		else
 			puts "You encounter a Forlorn Ghost!"
 			puts "You kicked the Forlorn Ghost's butt, earning you 10 experience!"
-			The_Player.current_experience += 10
-			main_prompt
+			@player.current_experience += 10
+			fight_time("ghost")
 		end
 	end
 
 	def regular_monsters(num)
 		if num == 1
 			puts "You encounter a Scorpion!"
+			fight_time("scorpion")
 		elsif num == 2
 			puts "You encounter a Harpy!"
+			fight_time("harpy")
 		else
-			puts "You encounter an Angry Horse Hell-Bent On Avenging His Sister Who Was Sent To A Glue Factory!"
+			puts "You encounter an Angry Horse, hell-bent on avenging his sister who was sent to a glue factory!"
+			fight_time("pissed_off_horse")
 		end
 	end
 
 	def challenging_monsters(num)
 		if num == 1
 			puts "You encounter a Minotaur!"
+			fight_time("minotaur")
 		elsif num == 2
 			puts "You encounter a Frost Dragon!"
+			fight_time("frost_dragon")
 		else
 			puts "You encounter an Insurance Salesman!"
+			fight_time("insurance_salesman")
 		end
 	end
 
