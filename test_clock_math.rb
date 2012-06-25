@@ -9,23 +9,9 @@
 #   end
 # end
 
-
-
-# clock-math
-# five_hour_clock = Clock.new(5)
-
-# five_hour_clock.next_hour #=> 0
-# five_hour_clock.next_hour #=> 1
-# five_hour_clock.next_hour #=> 2
-
-# five_hour_clock.reset!
-# five_hour_clock.pass_time(16) #=> 1
-
-# four_hour_clock = Clock.new(4)
-
-
-
 class Clock_a
+  attr_reader(:hour_range, :hour_now)
+
   def initialize(x)
     @hour_range = []
 
@@ -37,28 +23,20 @@ class Clock_a
     @hour_now = @starting_hour
   end
 
-  def hour_range
-    puts @hour_range.join(", ")
-  end
-
-  def hour_now
-    puts @hour_now
-  end
-
   def reset!
-    puts (@hour_now = @starting_hour)
+    @hour_now = @starting_hour
   end
 
   def pass_time(x)
-    x.times do |i|
-      @hour_now = @hour_range[i % @hour_range.length]
+    x.times do
+      next_hour
     end
-  puts @hour_now
+    @hour_now
   end
 
   def next_hour
     @hour_now = @hour_range[(@hour_now + 1) % @hour_range.length]
-    puts @hour_now
+    @hour_now
   end
 end
 
@@ -73,6 +51,8 @@ end
 # Below:
 
 class Clock_b
+  attr_reader(:hour_range, :hour_now)
+
   def initialize(x)
     @hour_range = []
 
@@ -84,51 +64,89 @@ class Clock_b
     @hour_now = @starting_hour
   end
 
-  def hour_range
-    puts @hour_range.join(", ")
-  end
-
-  def hour_now
-    puts @hour_now
-  end
-
   def reset!
-    puts (@hour_now = @starting_hour)
+    @hour_now = @starting_hour
   end
 
   def pass_time(x)
-    x.times do |i|
-      @hour_now = @hour_range[i % @hour_range.length]
+    x.times do
+      next_hour
     end
-  puts @hour_now
+    @hour_now
   end
 
   def next_hour
     @hour_now = @hour_range[@hour_now % @hour_range.length]
-    puts @hour_now
+    @hour_now
   end
 end
 
-five_hour_clock = Clock_a.new(5)
-five_hour_clock.hour_range
-five_hour_clock.hour_now
-five_hour_clock.pass_time(4)
-five_hour_clock.reset!
-five_hour_clock.next_hour
-five_hour_clock.next_hour
-five_hour_clock.next_hour
-five_hour_clock.next_hour
-five_hour_clock.next_hour
+# rspec test Clock_a
+describe Clock_a do
+  let(:five_hour_clock) { Clock_a.new(5) }
 
-puts
+  it "puts the hour range." do
+    five_hour_clock.hour_range.should == [0, 1, 2, 3, 4]
+  end
 
-five_hour_clock = Clock_b.new(5)
-five_hour_clock.hour_range
-five_hour_clock.hour_now
-five_hour_clock.pass_time(4)
-five_hour_clock.reset!
-five_hour_clock.next_hour
-five_hour_clock.next_hour
-five_hour_clock.next_hour
-five_hour_clock.next_hour
-five_hour_clock.next_hour
+  it "tells the current hour (begins @ last hour in the range: 4)." do
+    five_hour_clock.hour_now.should == 4
+  end
+
+  it "goes to the next hour in the range (0)." do
+    five_hour_clock.next_hour
+    five_hour_clock.hour_now.should == 0
+  end
+
+  it "goes to the next hour in the range (1)." do
+    five_hour_clock.next_hour
+    five_hour_clock.next_hour
+    five_hour_clock.hour_now.should == 1
+  end
+
+  it "resets the clock to the starting hour (4)." do
+    five_hour_clock.next_hour
+    five_hour_clock.next_hour
+    five_hour_clock.reset!  
+    five_hour_clock.hour_now.should == 4
+  end
+
+  it "uses pass_time to advance the hour 4 times." do
+    five_hour_clock.pass_time(4).should == 3
+  end
+end
+
+# rspec test Clock_b
+describe Clock_b do
+  let(:five_hour_clock) { Clock_b.new(5) }
+
+  it "puts the hour range." do
+    five_hour_clock.hour_range.should == [1, 2, 3, 4, 5]
+  end
+
+  it "tells the current hour (begins @ last hour in the range: 5)." do
+    five_hour_clock.hour_now.should == 5
+  end
+
+  it "goes to the next hour in the range (1)." do
+    five_hour_clock.next_hour
+    five_hour_clock.hour_now.should == 1
+  end
+
+  it "goes to the next hour in the range (2)." do
+    five_hour_clock.next_hour
+    five_hour_clock.next_hour
+    five_hour_clock.hour_now.should == 2
+  end
+
+  it "resets the clock to the starting hour (5)." do
+    five_hour_clock.next_hour
+    five_hour_clock.next_hour
+    five_hour_clock.reset!  
+    five_hour_clock.hour_now.should == 5
+  end
+
+  it "uses pass_time to advance the hour 4 times." do
+    five_hour_clock.pass_time(4).should == 4
+  end
+end
