@@ -108,6 +108,34 @@ puts hand_of_cards.count{ |x| x.include?("Two") }
 puts hand_of_cards.count{ |x| x.include?("Ace") }
 # ...and something with "Ace" in it!
 puts hand_of_cards.count{ |x| x.include?("Walrus") }
-# ...and who the flipping heck has a "Walrus" in their hand of cards? Whatever, someone does, and it works!
+# ...and who the flipping heck has a "Walrus" in their hand of cards? Whatever, someone does, apparently!
 puts hand_of_cards.count{ |x| x.include?("Porcupine") }
 # However, sadly, they don't have a "Porcupine"...
+
+puts
+
+# Hey, how many e's are in the hand?
+puts hand_of_cards.count{ |x| x.include?("e") }
+# ...wait, what? 3? "Two of Hearts" has 1, "Ace of Spades" has 2, and "Walrus of Cheese" has 3...should be 6...
+# Lets poke around a bit...
+hand_of_cards = []
+puts "Our hand is now empty." if hand_of_cards == []
+# Alright, so hand_of_cards is empty...first, put that Two of Hearts back in:
+hand_of_cards.push("Two of Hearts")
+# ...and now check for the number of e's:
+puts hand_of_cards.count{ |x| x.include?("e") }
+# Okay, there is 1...now to put that Ace of Spades back in:
+hand_of_cards.push("Ace of Spades")
+# ...check for e's again:
+puts hand_of_cards.count{ |x| x.include?("e") }
+# Now there are 2. So either one of three things is happening:
+# 1. Ruby is keeping track of the object with the largest number of e's in it,
+# 2. Ruby is keeping track of the number of objects with any number of e's in it, or
+# 3. Ruby is keeping track of the number of e's in the last object evaluated.
+# Testing the latter, first, by adding something with no e's in it:
+hand_of_cards.push("What is a roflpotamus?")
+puts hand_of_cards.count{ |x| x.include?("e") }
+# ...results in 2, which eliminates the latter (#3). Now, to add something with 1 e in it:
+hand_of_cards.push("Umbrella")
+puts hand_of_cards.count{ |x| x.include?("e") }
+# ...which results in 3. This eliminates #1 as a possibility, as there is nothing with 3 e's in it. 
