@@ -98,3 +98,16 @@ puts "There are now #{hand_of_cards.count} cards in the hand."
 puts hand_of_cards.count("Two of Hearts")
 # But there is nothing with "Two" in the hand:
 puts hand_of_cards.count("Two")
+# ...well, not this way, anyhow...
+
+puts
+
+# ...but if we were to try it this way:
+puts hand_of_cards.count{ |x| x.include?("Two") }
+# ...we have something with "Two" in it!
+puts hand_of_cards.count{ |x| x.include?("Ace") }
+# ...and something with "Ace" in it!
+puts hand_of_cards.count{ |x| x.include?("Walrus") }
+# ...and who the flipping heck has a "Walrus" in their hand of cards? Whatever, someone does, and it works!
+puts hand_of_cards.count{ |x| x.include?("Porcupine") }
+# However, sadly, they don't have a "Porcupine"...
