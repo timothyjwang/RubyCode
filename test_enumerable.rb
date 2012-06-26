@@ -69,3 +69,14 @@ longest = %w(dog goat roflpotamus cheese).inject do |memo, word|
   # memo = roflpotamus.length, or 11; and word.length == cheese.length == 6; memo stays roflpotamus
 end
 puts "The longest is #{longest}."
+
+puts
+
+
+
+# Messing around with .any?
+has_an_ace = ["Two of Spades", "Queen of Hearts", "Ace of Clubs"]
+puts "There is an Ace." if has_an_ace.any? { |word| word.include?("Ace") } == true
+
+doesnt_have_an_ace = ["Four of Clubs", "Ten of Diamonds", "Three of Hearts"]
+puts "There are no Aces." if doesnt_have_an_ace.any? { |word| word.include?("Ace") } == false
