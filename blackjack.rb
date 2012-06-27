@@ -14,6 +14,27 @@
     # Reduce the value of that second Ace by 10. 22 => 12.
     # Etc...
 
+    # Playing around with a test file:
+      # hand = ["Ace of Spades", "Ace of Hearts", "Ace of Clubs", "Ace of Diamonds", "Eight of Hearts"]
+      # score = 0
+
+      # number_of_aces = hand.count { |card| card.include?("Ace") }
+
+      # number_of_aces.times do
+      #   score += 11
+      # end
+
+      # score += 8
+
+      # if score > 21 && number_of_aces >= 1
+      #   number_of_aces.times do
+      #     score -= 10 until score <= 21
+      #   end
+      # end
+
+      # puts "The score is #{score}."
+      # puts "That's too much!" if score > 21
+
   def round_of_blackjack(player_credits, player_bid)
     player_credits = player_credits
     player_bid = player_bid
