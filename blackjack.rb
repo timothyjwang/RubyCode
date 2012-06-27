@@ -62,6 +62,36 @@
     # Problem is riiiiight here...--------------------^      ^
     # -------------------------------------------------------|
 
+    # After removing part of += value to hand_score (that tells whether to add 1 or 11 with aces):
+      # Care to play a round of blackjack? You have 200 credits.
+      # yes
+      # How many credits would you like to wager?
+      # 25
+      # You have been dealt two cards: 4 of Clubs, Ace of Clubs.
+      # The dealer has been dealt two cards, and is showing 2 of Spades.
+      # Hit, or stay?
+      # hit
+      # Your hand contains 4 of Clubs, Ace of Clubs, Queen of Spades.
+      # Hit, or stay?
+      # hit
+      # Your hand contains 4 of Clubs, Ace of Clubs, Queen of Spades, 5 of Spades.
+      # Hit, or stay?
+      # stay
+      # The dealer adds a Ace of Spades to their hand.
+      # The dealer adds a 7 of Spades to their hand.
+      # The dealer adds a 5 of Hearts to their hand.
+      # Your 20 whomps the dealer's meager 16.
+      # This round, the dealer's hand contained: Ace of Diamonds, 2 of Spades, Ace of Spades, 7 of Spades, 5 of Hearts.
+      # You started with 200 credits, and your bid was 25.
+      # Winning doubled your bid, and earned you 50 credits.
+      # Care to play a round of blackjack? You have 250 credits.
+    # 11 + 2 = 13, + 11 = 24; => 14 => 4; + 7 = 11, + 5 = 16.
+    # Above is what I assume the program went through to arrive at 16, because the hand could have equaled 21:
+    # 11 (Ace of Diamonds) + 2 (of Spades) = 13, + 11 (Ace of Spades), arrive at 24.  Deduct 10, = 14. + 7 of Spades.
+
+    # Because it didn't arrive at 21, I am led to believe that all aces are being taken into consideration at once
+    # (not doing one at a time, and then stopping if necessary).
+
   def round_of_blackjack(player_credits, player_bid)
     player_credits = player_credits
     player_bid = player_bid
@@ -184,11 +214,7 @@
         hand_score += 10
         x += 1
       elsif players_hand[x].include?("Ace")
-        if (hand_score + 11) > 21
-          hand_score += 1
-        else
-          hand_score += 11
-        end 
+        hand_score += 11
         x += 1  
       elsif
         # Strip everything but the numbers from the string
