@@ -62,7 +62,7 @@
     # Problem is riiiiight here...--------------------^      ^
     # -------------------------------------------------------|
 
-    # After removing part of += value to hand_score (that tells whether to add 1 or 11 with aces):
+    # After removing part of += value to hand_score (so that it always add 11):
       # Care to play a round of blackjack? You have 200 credits.
       # yes
       # How many credits would you like to wager?
@@ -91,6 +91,31 @@
 
     # Because it didn't arrive at 21, I am led to believe that all aces are being taken into consideration at once
     # (not doing one at a time, and then stopping if necessary).
+
+    # Further testing:
+      # hand = ["Ace of Spades", "Three of Clubs", "Ace of Diamonds", "Nine of Clubs", "Nine of Hearts"]
+      # hand_score = 0
+
+      # hand_score += 11
+      # hand_score += 3
+      # hand_score += 11
+      # hand_score += 9
+      # hand_score += 9
+
+      # number_of_aces = hand.count { |card| card.include?("Ace") }
+
+      # puts hand_score
+      # puts number_of_aces
+
+      # if hand_score > 21 && number_of_aces > 0
+      #   until hand_score < 21 || number_of_aces == 0
+      #     hand_score -= 10 unless number_of_aces == 0
+      #     number_of_aces -= 1
+      #   end
+      # end
+
+      # puts "Hand score after re-evaluation:"
+      # puts hand_score
 
   def round_of_blackjack(player_credits, player_bid)
     player_credits = player_credits
@@ -227,11 +252,14 @@
     number_of_aces = players_hand.count { |card| card.include?("Ace") }
 
     if hand_score > 21 && number_of_aces > 0
-      until number_of_aces == 0
-        hand_score -= 10
+      until hand_score < 21
+        hand_score -= 10 unless number_of_aces == 0
         number_of_aces -= 1
       end
     end
+
+    # ...dealer's hand contained: Ace of Spades, 3 of Clubs, Ace of Diamonds, 9 of Clubs, 9 of Hearts, 7 of Spades.
+    # ...dealer's hand contained: Ace of Diamonds, 2 of Spades, Ace of Spades, 7 of Spades, 5 of Hearts.
 
     hand_score
   end
