@@ -1,4 +1,4 @@
-# Blackjack.rb version 3.0
+# Blackjack.rb version 3.1
 
 # Notes on progress / current problems:
   # Your hand contains: Jack of Clubs, Ace of Spades, Ace of Clubs.
@@ -15,7 +15,7 @@
     # Etc...
 
     # Playing around with a test file:
-      # hand = ["Ace of Spades", "Ace of Hearts", "Ace of Clubs", "Ace of Diamonds", "Eight of Hearts"]
+      # hand = ["Ace of Spades", "Ace of Hearts", "Ace of Clubs", "Ace of Diamonds", "Ten of Hearts", "Jack of Spades"]
       # score = 0
 
       # number_of_aces = hand.count { |card| card.include?("Ace") }
@@ -24,16 +24,43 @@
       #   score += 11
       # end
 
-      # score += 8
+      # score += 10
+      # score += 10
 
       # if score > 21 && number_of_aces >= 1
-      #   number_of_aces.times do
-      #     score -= 10 until score <= 21
-      #   end
+      #   until number_of_aces == 0
+      #     score -= 10
+      #     number_of_aces -= 1
+      #   end  
       # end
 
       # puts "The score is #{score}."
       # puts "That's too much!" if score > 21
+
+    # In it's current state, not working:
+      # Care to play a round of blackjack? You have 200 credits.
+      # yes
+      # How many credits would you like to wager?
+      # 25
+      # You have been dealt two cards: Queen of Diamonds, Queen of Hearts.
+      # The dealer has been dealt two cards, and is showing 3 of Clubs.
+      # Hit, or stay?
+      # stay
+      # The dealer adds a Ace of Diamonds to their hand.
+      # The dealer adds a 9 of Clubs to their hand.
+      # The dealer adds a 9 of Hearts to their hand.
+      # The dealer adds a 7 of Spades to their hand.
+      # This round, the dealer's hand contained: Ace of Spades, 3 of Clubs, Ace of Diamonds, 9 of Clubs, 9 of Hearts, 7 of Spades.
+      # It's a push.  Your 25 credit bid has been returned.
+      # Care to play a round of blackjack? You have 200 credits.
+    # Ace + 3 (11 + 3) = 14; they are dealt Ace of Diamonds. 14 => 15; they are dealt 9 of Clubs. 15 => 24.
+    # (should have) re-evaluated to 1 + 3 + 1 + 9 = 14; dealt 9 of Hearts. 14 => 23.  Should have busted at this point.
+    # Yet still, they were able to add a 7 (= 30), and it was considered a push (20 = 20).
+
+    # Looking at it differently (as to how it could have wound up == 20):
+    # Ace 3 + = 14, + Ace = 15, + 9 = 24, => 14, + 9 = 23, => 13, + 7 = 20.
+    # Problem is riiiiight here...--------------------^      ^
+    # -------------------------------------------------------|
 
   def round_of_blackjack(player_credits, player_bid)
     player_credits = player_credits
@@ -126,26 +153,19 @@
   end
 
   def hit_loop(shuffled_deck, deck_index, players_hand, player_credits, player_bid, dealers_hand)
-    shuffled_deck = shuffled_deck
-    deck_index = deck_index
-    players_hand = players_hand
-    dealers_hand = dealers_hand
-
     hit_or_stay
     until get_chomp_down == "stay"
       players_hand.push(shuffled_deck[deck_index])
+      puts "Your hand contains #{players_hand.join(", ")}."
       deck_index += 1
 
-      has_21 = evaluate_hand_score(players_hand)
-
-      if has_21 == 21
+      if evaluate_hand_score(players_hand) == 21
         # Break player out of until-loop when they hit towards 21
         puts "You have a score of 21 with: #{players_hand.join(", ")}."
         break
       else
         # Busting
-        busted = tell_player_hand_and_score(players_hand)
-        if busted > 21
+        if evaluate_hand_score(players_hand) > 21
           puts "You busted."
           round_result("lose", player_credits, player_bid, dealers_hand)
         else
@@ -157,19 +177,6 @@
   end
 
   def evaluate_hand_score(players_hand)
-    # Determine if the hand contains an Ace
-    # If so, remove it from the array, and .push it to the last place
-    # This way, Aces get evaluated last (11 or 1)
-    y = 0        # indexing for the Ace-checking
-    while y < players_hand.length
-      if players_hand[y].include?("Ace")
-        players_hand.push(players_hand.delete_at(y))
-        y += 1
-      else
-        y += 1
-      end
-    end
-
     hand_score = 0
     x = 0       # indexing for the hand scoring, below
     while x < players_hand.length
@@ -189,6 +196,17 @@
         x += 1
       end
     end
+
+    # Count the Aces
+    number_of_aces = players_hand.count { |card| card.include?("Ace") }
+
+    if hand_score > 21 && number_of_aces > 0
+      until number_of_aces == 0
+        hand_score -= 10
+        number_of_aces -= 1
+      end
+    end
+
     hand_score
   end
 
