@@ -1,121 +1,6 @@
 # Blackjack.rb version 3.1
 
 # Notes on progress / current problems:
-  # Your hand contains: Jack of Clubs, Ace of Spades, Ace of Clubs.
-  # Your hand value is 22.
-  # You busted.
-  # ^ Probably going to want to fix that...
-  
-    # Possible resolution: initially declare all Aces == 11, and then evaulate individually.
-    # Example: Jack of Clubs, Ace of Spades, Ace of Clubs == 32.
-    # Does it result in a bust? Yes. Does it contain an Ace? Yes.
-    # Reduce the value of one Ace by 10. 32 => 22.
-    # Does it result in a bust? Yes. Does it contain any Aces beyond the first? Yes.
-    # Reduce the value of that second Ace by 10. 22 => 12.
-    # Etc...
-
-    # Playing around with a test file:
-      # hand = ["Ace of Spades", "Ace of Hearts", "Ace of Clubs", "Ace of Diamonds", "Ten of Hearts", "Jack of Spades"]
-      # score = 0
-
-      # number_of_aces = hand.count { |card| card.include?("Ace") }
-
-      # number_of_aces.times do
-      #   score += 11
-      # end
-
-      # score += 10
-      # score += 10
-
-      # if score > 21 && number_of_aces >= 1
-      #   until number_of_aces == 0
-      #     score -= 10
-      #     number_of_aces -= 1
-      #   end  
-      # end
-
-      # puts "The score is #{score}."
-      # puts "That's too much!" if score > 21
-
-    # In it's current state, not working:
-      # Care to play a round of blackjack? You have 200 credits.
-      # yes
-      # How many credits would you like to wager?
-      # 25
-      # You have been dealt two cards: Queen of Diamonds, Queen of Hearts.
-      # The dealer has been dealt two cards, and is showing 3 of Clubs.
-      # Hit, or stay?
-      # stay
-      # The dealer adds a Ace of Diamonds to their hand.
-      # The dealer adds a 9 of Clubs to their hand.
-      # The dealer adds a 9 of Hearts to their hand.
-      # The dealer adds a 7 of Spades to their hand.
-      # This round, the dealer's hand contained: Ace of Spades, 3 of Clubs, Ace of Diamonds, 9 of Clubs, 9 of Hearts, 7 of Spades.
-      # It's a push.  Your 25 credit bid has been returned.
-      # Care to play a round of blackjack? You have 200 credits.
-    # Ace + 3 (11 + 3) = 14; they are dealt Ace of Diamonds. 14 => 15; they are dealt 9 of Clubs. 15 => 24.
-    # (should have) re-evaluated to 1 + 3 + 1 + 9 = 14; dealt 9 of Hearts. 14 => 23.  Should have busted at this point.
-    # Yet still, they were able to add a 7 (= 30), and it was considered a push (20 = 20).
-
-    # Looking at it differently (as to how it could have wound up == 20):
-    # Ace 3 + = 14, + Ace = 15, + 9 = 24, => 14, + 9 = 23, => 13, + 7 = 20.
-    # Problem is riiiiight here...--------------------^      ^
-    # -------------------------------------------------------|
-
-    # After removing part of += value to hand_score (so that it always add 11):
-      # Care to play a round of blackjack? You have 200 credits.
-      # yes
-      # How many credits would you like to wager?
-      # 25
-      # You have been dealt two cards: 4 of Clubs, Ace of Clubs.
-      # The dealer has been dealt two cards, and is showing 2 of Spades.
-      # Hit, or stay?
-      # hit
-      # Your hand contains 4 of Clubs, Ace of Clubs, Queen of Spades.
-      # Hit, or stay?
-      # hit
-      # Your hand contains 4 of Clubs, Ace of Clubs, Queen of Spades, 5 of Spades.
-      # Hit, or stay?
-      # stay
-      # The dealer adds a Ace of Spades to their hand.
-      # The dealer adds a 7 of Spades to their hand.
-      # The dealer adds a 5 of Hearts to their hand.
-      # Your 20 whomps the dealer's meager 16.
-      # This round, the dealer's hand contained: Ace of Diamonds, 2 of Spades, Ace of Spades, 7 of Spades, 5 of Hearts.
-      # You started with 200 credits, and your bid was 25.
-      # Winning doubled your bid, and earned you 50 credits.
-      # Care to play a round of blackjack? You have 250 credits.
-    # 11 + 2 = 13, + 11 = 24; => 14 => 4; + 7 = 11, + 5 = 16.
-    # Above is what I assume the program went through to arrive at 16, because the hand could have equaled 21:
-    # 11 (Ace of Diamonds) + 2 (of Spades) = 13, + 11 (Ace of Spades), arrive at 24.  Deduct 10, = 14. + 7 of Spades.
-
-    # Because it didn't arrive at 21, I am led to believe that all aces are being taken into consideration at once
-    # (not doing one at a time, and then stopping if necessary).
-
-    # Further testing:
-      # hand = ["Ace of Spades", "Three of Clubs", "Ace of Diamonds", "Nine of Clubs", "Nine of Hearts"]
-      # hand_score = 0
-
-      # hand_score += 11
-      # hand_score += 3
-      # hand_score += 11
-      # hand_score += 9
-      # hand_score += 9
-
-      # number_of_aces = hand.count { |card| card.include?("Ace") }
-
-      # puts hand_score
-      # puts number_of_aces
-
-      # if hand_score > 21 && number_of_aces > 0
-      #   until hand_score < 21 || number_of_aces == 0
-      #     hand_score -= 10 unless number_of_aces == 0
-      #     number_of_aces -= 1
-      #   end
-      # end
-
-      # puts "Hand score after re-evaluation:"
-      # puts hand_score
 
   def round_of_blackjack(player_credits, player_bid)
     player_credits = player_credits
@@ -252,14 +137,11 @@
     number_of_aces = players_hand.count { |card| card.include?("Ace") }
 
     if hand_score > 21 && number_of_aces > 0
-      until hand_score < 21
+      until hand_score < 21 || number_of_aces == 0
         hand_score -= 10 unless number_of_aces == 0
         number_of_aces -= 1
       end
     end
-
-    # ...dealer's hand contained: Ace of Spades, 3 of Clubs, Ace of Diamonds, 9 of Clubs, 9 of Hearts, 7 of Spades.
-    # ...dealer's hand contained: Ace of Diamonds, 2 of Spades, Ace of Spades, 7 of Spades, 5 of Hearts.
 
     hand_score
   end
