@@ -1,4 +1,4 @@
-# Teseting classes and instance variables,
+# Testing classes and instance variables,
 # as in Chapter 13 of Chris Pine's Learn to Program book.
 
 class Die
