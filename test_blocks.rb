@@ -1,8 +1,6 @@
 # Testing blocks and procs,
 # as in Chapter 14 of Chris Pine's Learn to Program book.
 
-major_time1 = Time.now
-
 # Basic proc:
 warning = Proc.new do
 	puts "Look out! A random flying walrus!"
@@ -189,3 +187,22 @@ profile 'count to a million' do
 		number += 1
 	end
 end
+
+puts	# blank space
+
+def grandfather_clock(chime)
+	hours_gone_by_today = Time.new.hour
+	puts "#{hours_gone_by_today} hours have passed by, today."
+	major_hour = (hours_gone_by_today % 12)
+	puts "The current major hour of the day is #{major_hour}."
+
+	major_hour.times do
+		chime.call
+	end
+end
+
+chime = Proc.new do
+	puts "Bong!"
+end
+
+grandfather_clock(chime)
