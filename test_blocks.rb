@@ -1,6 +1,8 @@
 # Testing blocks and procs,
 # as in Chapter 14 of Chris Pine's Learn to Program book.
 
+major_time1 = Time.now
+
 # Basic proc:
 warning = Proc.new do
 	puts "Look out! A random flying walrus!"
@@ -161,4 +163,29 @@ end
 
 [1, 2, 3, 4, 5].each_even do |odd_ball|
 	puts odd_ball.to_s + " is not an even number."
+end
+
+puts	# blank space
+
+def profile(block_description, &block)
+	start_time = Time.now
+	block.call
+	duration = Time.now - start_time
+	puts block_description + ': ' + duration.to_s + " seconds."
+end
+
+profile '25000 doublings' do
+	number = 1
+	25000.times do
+		number += number
+	end
+
+	puts number.to_s.length.to_s + ' digits'
+end
+
+profile 'count to a million' do
+	number = 0
+	1000000.times do
+		number += 1
+	end
 end
