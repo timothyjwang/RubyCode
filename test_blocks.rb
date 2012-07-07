@@ -196,8 +196,14 @@ def grandfather_clock(chime)
 	major_hour = (hours_gone_by_today % 12)
 	puts "The current major hour of the day is #{major_hour}."
 
-	major_hour.times do
-		chime.call
+	if major_hour == 0
+		12.times do
+			chime.call
+		end
+	else
+		major_hour.times do
+			chime.call
+		end
 	end
 end
 
