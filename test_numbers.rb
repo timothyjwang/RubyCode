@@ -4,7 +4,8 @@ puts "First, some exponentiation:"
 puts "5 to the power of 2 is: " + (5 ** 2).to_s
 puts "4 to the power of 2 is: " + (4 ** 2).to_s
 puts "3 to the power of 3 is: " + (3 ** 3).to_s
-puts ""
+
+puts	# blank space
 
 # likewise, you can use floats in exponents, such as finding square roots
 # the following should result in 5, 3 and 2 (really, 2.23606797749979), respectively
@@ -12,7 +13,8 @@ puts "Now to find some square roots:"
 puts "The square root of 25 is: " + ((25 ** 0.5).to_i).to_s
 puts "The square root of 9 is: " + ((9 ** 0.5).to_i).to_s
 puts "The square root of 5 is: " + ((5 ** 0.5).to_i).to_s
-puts ""
+
+puts	# blank space
 
 # modulus ( % ) gives the remainder after division
 # the following should result in 1, 1 and 3,respectively
@@ -20,14 +22,16 @@ puts "And now, for some modulus:"
 puts "3 % 2 has a remainder of: " + (3 % 2).to_s
 puts "5 % 2 has a remainder of: " + (5 % 2).to_s
 puts "15 % 4 has a remainder of: " + (15 % 4).to_s
-puts ""
+
+puts	# blank space
 
 # the abs, or absolute, method will return the absoulte value of the number
 # the following should both return 3
 puts "abs returns the absolute value of a number:"
 puts "5 minus 2, absolute, is: " + (5 - 2).abs.to_s
 puts "2 minus 5, absolute, is: " + (2 - 5).abs.to_s
-puts ""
+
+puts	# blank space
 
 # the rand function will create a random number.  On it's own, it will return a float
 # greater-than-or-equal-to 0.0, and less than 1.0
@@ -42,7 +46,8 @@ puts rand(1)
 # rand(100) will always create the range 0-99, but +1 will ensure that we get 1-100 (0 will become 1, 
 # and 99 will become 100)
 puts rand(100) + 1
-puts ""
+
+puts	# blank space
 
 # we can use srand to generate a seed for the random fucntion - this will return the same random numbers
 # in the same sequence on two different runs!
@@ -59,7 +64,8 @@ puts (rand(100))
 puts (rand(100))
 puts (rand(100))
 puts (rand(100))
-puts ""
+
+puts	# blank space
 
 puts "Now to play with Math a little bit:"
 puts "Who would like some PI?"
@@ -74,3 +80,22 @@ puts (Math.tan(Math::PI / 4))
 puts (Math.log(Math::E ** 2))
 puts "Lastly, we find the square root of 5, add 1 to it, then divide that result by 2:"
 puts ((1 + Math.sqrt(5)) / 2)
+
+puts	# blank space
+
+# more fun random maths
+seconds_per_minute = 60
+minutes_per_hour = 60
+hours_per_day = 24
+days_per_year = 365.25
+
+hours_per_year = hours_per_day * days_per_year
+puts "There are " + hours_per_year.to_s + " hours in a year."
+
+minutes_per_decade = (((days_per_year * 10) * hours_per_day) * minutes_per_hour)
+puts "There are " + minutes_per_decade.to_s + " minutes in a decade."
+
+puts "How old are you? Give me years, and I'll give you seconds!"
+input_age = gets.chomp.to_i
+age_in_seconds = ((((days_per_year * input_age) * hours_per_day) * minutes_per_hour) * seconds_per_minute)
+puts "You are #{age_in_seconds} seconds old. Daaaaaayyum!"
