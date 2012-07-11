@@ -20,7 +20,7 @@ until year_range.last == ending_year
 	put_year_into_range += 1
 end
 
-year_range.length.times do |year|
+year_range.each do |year|
 	puts year if year % 4 == 0
 end
 
