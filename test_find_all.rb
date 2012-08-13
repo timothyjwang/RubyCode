@@ -11,7 +11,7 @@ puts join_me.join(", ")
 
 puts
 
-origin = ["Ace of Clubs", "Ace of Diamonds", "Ace of Hearts", "Ace of Spades"]
+origin = hand
 destination = []
 
 all_the_things = origin.find_all { |card| card.include?("Ace") }
