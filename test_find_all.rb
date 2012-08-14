@@ -41,9 +41,25 @@ puts "The hand again: #{hand}."
 
 puts
 
-# As expected, using ! alters the original hand
+# As expected, using select! alters the original hand
 hand = ["Ace of Spades", "Four of Spades", "Ace of Hearts", "Ace of Diamonds", "Ten of Hearts", "Three of Diamonds", "Ace of Clubs"]
 select_all_aces = hand.select! { |x| x =~ /(Ace)/ } .join(", ")
 puts "The hand: #{hand}."
 puts "Selecting aces only: #{select_all_aces}."
+
+puts
+
+# Alternatively, we can use reject to refuse any non-Ace
+hand = ["Ace of Spades", "Four of Spades", "Ace of Hearts", "Ace of Diamonds", "Ten of Hearts", "Three of Diamonds", "Ace of Clubs"]
+select_all_aces = hand.reject { |x| x.include?("Ace") != true } .join(", ")
+puts "The hand: #{hand}."
+puts "Selecting aces only: #{select_all_aces}."
 puts "The hand again: #{hand}."
+
+puts
+
+# And reject! alters the original hand
+hand = ["Ace of Spades", "Four of Spades", "Ace of Hearts", "Ace of Diamonds", "Ten of Hearts", "Three of Diamonds", "Ace of Clubs"]
+select_all_aces = hand.reject! { |x| x.include?("Ace") != true } .join(", ")
+puts "The hand: #{hand}."
+puts "Selecting aces only: #{select_all_aces}."
