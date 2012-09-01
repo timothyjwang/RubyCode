@@ -82,3 +82,44 @@ puts some_array[-3, 2].join(", ")
 # The reason this gives us "e, f", is because: while -3 tells Ruby where to start looking in the array
 # (the -3th index, or "e"), the next number (2) tells Ruby the length of what we want returned (meaning,
 # "2" has nothing to do with the index ).
+
+puts
+
+a1 = ["red", "green", "blue"]
+a2 = ["a", "b", "c"]
+a3 = [1, 2, 3]
+a_combi = [a1, a2, a3]
+puts a_combi.join(", ")
+
+# .assoc looks through an array of arrays, looking at each sub-array, and testing to see if the first
+# element in the sub-array matches the given object to look for:
+puts a_combi.assoc(1).join(", ")
+puts a_combi.assoc("a").join(", ")
+puts a_combi.assoc("red").join(", ")
+
+# The following, however, will all result in "nil" - even though each of the three sub-arrays contain
+# the requested object (2, "blue" and "b", respectively), the fact that they are not the *first*
+# element in the array means they are not found. And so, nil is returned.
+# puts a_combi.assoc(2).join(", ")
+# puts a_combi.assoc("blue").join(", ")
+# puts a_combi.assoc("b").join(", ")
+
+puts
+
+# Here's some interesting stuff - regarding using %w to create an array "easily":
+a1 = %w[red green blue]
+a2 = %w[a b c]
+a3 = %w[1 2 3]
+a_combi = [a1, a2, a3]
+puts a_combi.join(", ")
+# The first will result in "nil" - the other two, however, return the appropriate array:
+# puts a_combi.assoc(1).join(", ")
+puts a_combi.assoc("a").join(", ")
+puts a_combi.assoc("red").join(", ")
+# %w does NOT make [1 2 3] into [1, 2, 3]...
+# it DOES, however, make ["1", "2", "3"] - testing it:
+puts a_combi.assoc("1").join(", ")
+# And now it is found - huzzah!  No nil.
+
+puts
+
