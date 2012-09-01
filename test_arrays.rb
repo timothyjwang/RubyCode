@@ -9,7 +9,8 @@ puts names[2]
 puts ""
 puts "If we ask for something that doesn't exist (ie, out of range), we should get nothing:"
 puts names[3]
-puts ""
+
+puts
 
 # we can create a variable that is an empty array...
 types_of_waffles = []
@@ -18,11 +19,14 @@ types_of_waffles[2] = "White-chocolate-chip and blueberry"
 types_of_waffles[0] = "Whole-wheat and banana"
 types_of_waffles[1] = "Buttermilk"
 puts types_of_waffles
-puts ""
+
+puts
+
 # we can also change them...
 types_of_waffles[1] = "Sardine and horse radish"
 puts types_of_waffles
-puts ""
+
+puts
 
 # Regarding the usage of the Method, "Each":
 fruits = ["bananas", "strawberries", "mangos"]
@@ -30,7 +34,8 @@ fruits.each do |fruit|
 	puts "I sure to love to eat " + fruit + "."
 end
 # This essentially goes through the array, doing somthing to *each* something *in* the array
-puts ""
+
+puts 
 
 # let's look at .to_s and .join
 veggies = ["Broccoli", "Carrots", "Bell Peppers"]
@@ -45,7 +50,8 @@ puts veggies.join(', ')
 # Note that the above one does not add a comma after the last item in the array - the last item is not
 # considered.  If you want to add something after the final item in the array:
 puts veggies.join(' :) ') + ' 8)'
-puts ""
+
+puts 
 
 # Now to look at .push, .pop and .last
 # push and pop are opposites, as + and - are opposites
@@ -53,14 +59,26 @@ puts ""
 puts veggies.to_s
 veggies.push "Onions"
 puts veggies.to_s
-puts ""
+
+puts 
+
 # pop removes the last object from the array:
 puts veggies.to_s
 veggies.pop
 puts veggies.to_s
-puts ""
+
+puts 
+
 # and finally, last does not affect the array - it just tells us what is the last item in the array
 puts veggies.last
 veggies.push "Onions"
 puts veggies.last
-puts ""
+
+puts
+
+some_array = %w[a b c d e f g]
+puts "some_array: #{some_array.join(", ")}"
+puts some_array[-3, 2].join(", ")
+# The reason this gives us "e, f", is because: while -3 tells Ruby where to start looking in the array
+# (the -3th index, or "e"), the next number (2) tells Ruby the length of what we want returned (meaning,
+# "2" has nothing to do with the index ).
