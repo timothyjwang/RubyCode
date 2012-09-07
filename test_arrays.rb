@@ -106,13 +106,13 @@ puts a_combi.assoc("red").join(", ")
 
 puts
 
-# Here's some interesting stuff - regarding using %w to create an array "easily":
+# Here's some interesting stuff - regarding using %w to create an array:
 a1 = %w[red green blue]
 a2 = %w[a b c]
 a3 = %w[1 2 3]
 a_combi = [a1, a2, a3]
 puts a_combi.join(", ")
-# The first will result in "nil" - the other two, however, return the appropriate array:
+# This first one will result in "nil" - the other two, however, return the appropriate array:
 # puts a_combi.assoc(1).join(", ")
 puts a_combi.assoc("a").join(", ")
 puts a_combi.assoc("red").join(", ")
@@ -123,3 +123,11 @@ puts a_combi.assoc("1").join(", ")
 
 puts
 
+# PLaying around with multiple arrays that start with a given element:
+a1 = %w[orange banana cactus]
+a2 = %w[leemur hippo kitten]
+a3 = %w[orange roflsaurus cheeseburger]
+a_combi = [a1, a2, a3]
+puts a_combi.join(", ")
+puts a_combi.assoc("orange").join(", ")
+# The array 'a1' is returned, as it is the first array (found) that starts with the given element (orange).
