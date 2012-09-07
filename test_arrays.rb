@@ -123,7 +123,7 @@ puts a_combi.assoc("1").join(", ")
 
 puts
 
-# PLaying around with multiple arrays that start with a given element:
+# Playing around with multiple arrays that start with a given element:
 a1 = %w[orange banana cactus]
 a2 = %w[leemur hippo kitten]
 a3 = %w[orange roflsaurus cheeseburger]
@@ -131,3 +131,11 @@ a_combi = [a1, a2, a3]
 puts a_combi.join(", ")
 puts a_combi.assoc("orange").join(", ")
 # The array 'a1' is returned, as it is the first array (found) that starts with the given element (orange).
+
+puts
+
+# Using the previous example (lines 126-133):
+puts a_combi.assoc("orange") == a1
+# We see that the array is returned, as the above returns true. However...
+puts a_combi.assoc("orange").join(", ") == a1
+# ...this one returns false - note the usage of .join.
