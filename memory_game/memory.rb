@@ -22,6 +22,7 @@ Shoes.app :width => 800, :height => 600 do
 	@cards = []
 	@colors = []
 	@picked = []
+	@done = []
 
 	# For three rows...
 	3.times do |row|
@@ -70,13 +71,30 @@ Shoes.app :width => 800, :height => 600 do
 						@picked.shift
 					end
 
+					# "If the size of @picked == 2..."
+					if @picked.size == 2
+						# "...and they are both the same color..."
+						if @colors[@picked[0]] == @colors[@picked[1]]
+							# "...then put them both into @done."
+							@done << @picked[0]
+							@done << @picked[1]
+							@done.uniq!
+						end
+					end
+
+					if @done.size == 12
+						alert("You win!")
+					end
+
 				end
 			end
 		else
 			# Show the color of the card - presently stays shown
 			@cards.each_with_index { |c, space|
 				if !@picked.include?(space)
-					c.style(:fill => white)
+					if !@done.include?(space)
+						c.style(:fill => white)
+					end
 				end
 			}
 		end
