@@ -20,6 +20,8 @@ Shoes.app :width => 800, :height => 600 do
 
 	# First, @cards is an empty array:
 	@cards = []
+	@colors = []
+	@picked = []
 
 	# For three rows...
 	3.times do |row|
@@ -33,6 +35,11 @@ Shoes.app :width => 800, :height => 600 do
 			@cards << r
 		end
 	end
+
+	6.times do
+		@colors << rgb(rand() * 255, rand() * 255, rand() * 255)
+	end
+	@colors = @colors * 2
 
 	# (Either 'animate do' or 'click do')
 	# Finding the space where the cursor currently is:
@@ -51,14 +58,17 @@ Shoes.app :width => 800, :height => 600 do
 				# "...and in y..."
 				if (50..150).include?(over_y)
 					# "...then we reveal the color of the card underneath."
-					color = rgb(rand() * 255, rand() * 255, rand() * 255)
-					@cards[space].style(:fill => color)
+					@cards[space].style(:fill => @colors[space])
+					@picked << space
 				end
 			end
-		# "Else, if the mouse button is not depressed (or if it has been depressed and released)..."
 		else
-			# "...return the card to it's blank, unknown state (the color white)."
-			@cards.each {|card| card.style(:fill => white)}
+			# Show the color of the card - presently stays shown
+			@cards.each_with_index { |c, space|
+				if !@picked.include?(space)
+					c.style(:fill => white)
+				end
+			}
 		end
 	end
 
