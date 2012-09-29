@@ -1,6 +1,7 @@
 # Made for use with Shoes.
 
 Shoes.app :width => 800, :height => 600 do
+	# A variety of colors in hexidecimal:
 	red = "#FF0000"
 	green = "#00FF00"
 	blue = "#0000FF"
@@ -17,18 +18,24 @@ Shoes.app :width => 800, :height => 600 do
 	# third number, how wide the item is drawn
 	# fourth number, how tall the item is drawn
 
+	# First, @cards is an empty array:
 	@cards = []
 
+	# For three rows...
 	3.times do |row|
+		# ...we add four "columns" of cards...
 		4.times do |column|
-			r = rect 200 * column + 50,
-			200 * row + 50, 100, 100, :fill => white
+			# ...and define the space around each card, and the size of each card...
+			# ...storing it in 'r':
+			r = rect 200 * column + 50, 200 * row + 50, 100, 100, :fill => white
 		
+			# Adding 'r' to the array:
 			@cards << r
 		end
 	end
 
-	# Either 'animate do' or 'click do'
+	# (Either 'animate do' or 'click do')
+	# Finding the space where the cursor currently is:
 	animate do
 		button, x, y = self.mouse
 		column = x / 200
@@ -37,14 +44,20 @@ Shoes.app :width => 800, :height => 600 do
 		over_y = y % 200
 		space = (4 * row) + column
 
+		# "If the mouse button is depressed..."
 		if button == 1
+			# "...and if the cursor is over a button space in x..."
 			if (50..150).include?(over_x)
+				# "...and in y..."
 				if (50..150).include?(over_y)
+					# "...then we reveal the color of the card underneath."
 					color = rgb(rand() * 255, rand() * 255, rand() * 255)
 					@cards[space].style(:fill => color)
 				end
 			end
+		# "Else, if the mouse button is not depressed (or if it has been depressed and released)..."
 		else
+			# "...return the card to it's blank, unknown state (the color white)."
 			@cards.each {|card| card.style(:fill => white)}
 		end
 	end

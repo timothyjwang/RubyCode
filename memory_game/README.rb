@@ -1,2 +1,5 @@
 # Memory game - creadted during/for CoderDojo.
-# Created 9/15/2012
+
+# Created Saturday, 9/15/2012
+# Additionally modified:
+	# Saturday, 9/29/2012
