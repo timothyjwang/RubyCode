@@ -60,6 +60,14 @@ Shoes.app :width => 800, :height => 600 do
 					# "...then we reveal the color of the card underneath."
 					@cards[space].style(:fill => @colors[space])
 					@picked << space
+					# Only show the two most-recently picked cards - if another is picked, we hide the "first"
+					if @picked.size > 2
+						# Hiding the "first" with shift
+						@picked.shift
+					end
+					# Note, this produces an interesting issue: if the same card is picked twice, or more, .shift still occurs
+					# (the same care is being added to @picked numerous times)
+
 				end
 			end
 		else
