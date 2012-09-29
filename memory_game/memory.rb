@@ -1,4 +1,5 @@
 # Made for use with Shoes.
+# Version 1.0 - finalized version for CoderDojo.
 
 Shoes.app :width => 800, :height => 600 do
 	# A variety of colors in hexidecimal:
