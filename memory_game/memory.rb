@@ -41,6 +41,7 @@ Shoes.app :width => 800, :height => 600 do
 		@colors << rgb(rand() * 255, rand() * 255, rand() * 255)
 	end
 	@colors = @colors * 2
+	@colors.sort! { rand(3) - 1 }
 
 	# (Either 'animate do' or 'click do')
 	# Finding the space where the cursor currently is:
