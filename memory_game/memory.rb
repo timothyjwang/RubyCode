@@ -20,7 +20,7 @@ Shoes.app :width => 800, :height => 600 do
 
 	# First, @cards is an empty array:
 	@cards = []
-	@colors = []
+	@colors = [red, green, blue, yellow, purple, orange]
 	@picked = []
 	@done = []
 
@@ -37,13 +37,13 @@ Shoes.app :width => 800, :height => 600 do
 		end
 	end
 
-	6.times do
-		@colors << rgb(rand() * 255, rand() * 255, rand() * 255)
-	end
+	# 6.times do
+	# 	@colors << rgb(rand() * 255, rand() * 255, rand() * 255)
+	# end
 	@colors = @colors * 2
-	@colors.sort! { rand(3) - 1 }
+	# @colors.sort! { rand(3) - 1 }
 	# or could do:
-	# @colors.shuffle!
+	@colors.shuffle!
 
 	# (Either 'animate do' or 'click do')
 	# Finding the space where the cursor currently is:

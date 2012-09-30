@@ -4,3 +4,6 @@
 # Additionally modified:
 	# Saturday, 9/29/2012
 		# Finalized version for CoderDojo.
+
+	# Saturday, 9/29/2012
+		# Personalization/Customization - specify colors
