@@ -58,11 +58,13 @@ Shoes.app :width => 800, :height => 600 do
 
 		# "If the mouse button is depressed..."
 		if button == 1
-			@click_count += 1
 			# "...and if the cursor is over a button space in x..."
 			if (50..150).include?(over_x)
 				# "...and in y..."
 				if (50..150).include?(over_y)
+					# Increment @click_count here:
+					@click_count += 1
+
 					# "...then we reveal the color of the card underneath."
 					@cards[space].style(:fill => @colors[space])
 					@picked << space
