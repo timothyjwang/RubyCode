@@ -6,4 +6,5 @@
 		# Finalized version for CoderDojo.
 
 	# Saturday, 9/29/2012
-		# Personalization/Customization - specify colors
+		# Personalization/Customization - specify colors.
+		# Personalization/Customization - add click-counter.

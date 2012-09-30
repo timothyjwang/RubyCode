@@ -23,6 +23,7 @@ Shoes.app :width => 800, :height => 600 do
 	@colors = [red, green, blue, yellow, purple, orange]
 	@picked = []
 	@done = []
+	@click_count = 0
 
 	# For three rows...
 	3.times do |row|
@@ -57,6 +58,7 @@ Shoes.app :width => 800, :height => 600 do
 
 		# "If the mouse button is depressed..."
 		if button == 1
+			@click_count += 1
 			# "...and if the cursor is over a button space in x..."
 			if (50..150).include?(over_x)
 				# "...and in y..."
@@ -86,7 +88,7 @@ Shoes.app :width => 800, :height => 600 do
 					end
 
 					if @done.size == 12
-						alert("You win!")
+						alert("You win! You clicked #{@click_count} times.")
 					end
 
 				end
