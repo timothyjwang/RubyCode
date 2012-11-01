@@ -6,6 +6,8 @@
 
 
 
+deez_fluffy_kitties = []
+
 require 'erb'
 
 class Fluffy_Kitten
@@ -58,5 +60,9 @@ kitty_prince.add_point_of_interest("Affectionate attention-seeker - loves to be 
 
 kitty_mindy = Fluffy_Kitten.new("Mindy", "female", "orange", "standard, close-lying coat of fur - soft")
 kitty_mindy.add_point_of_interest("Extremely shy, easy to frighten - but once she warms up to you, she is a giant sweetheart.")
+
+deez_fluffy_kitties << fluffywillykitty
+deez_fluffy_kitties << kitty_prince
+deez_fluffy_kitties << kitty_mindy
 
 rhtml.run(fluffywillykitty.get_binding)
