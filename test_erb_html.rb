@@ -53,4 +53,10 @@ fluffywillykitty = Fluffy_Kitten.new("Willamette", "female", "grey", "omgwtfbbqf
 fluffywillykitty.add_point_of_interest("Fluffy.  Extremely fluffy.")
 fluffywillykitty.add_point_of_interest("Has been known to ambush people and attack feet during dark hours.  A night-hunter, of sorts.")
 
+kitty_prince = Fluffy_Kitten.new("Prince", "male", "black and white", "standard, close-lying coat of fur")
+kitty_prince.add_point_of_interest("Affectionate attention-seeker - loves to be pet a lot, but will lie on your lap for hours and not want to move.")
+
+kitty_mindy = Fluffy_Kitten.new("Mindy", "female", "orange", "standard, close-lying coat of fur - soft")
+kitty_mindy.add_point_of_interest("Extremely shy, easy to frighten - but once she warms up to you, she is a giant sweetheart.")
+
 rhtml.run(fluffywillykitty.get_binding)
