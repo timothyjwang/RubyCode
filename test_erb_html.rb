@@ -64,13 +64,14 @@ end
 
 fluffywillykitty = Fluffy_Kitten.new("Willamette", "female", "grey", "omgwtfbbqfluffykitty")
 fluffywillykitty.add_point_of_interest("Fluffy.  Extremely fluffy.")
-fluffywillykitty.add_point_of_interest("Has been known to ambush people and attack feet during dark hours.  A night-hunter, of sorts.")
+fluffywillykitty.add_point_of_interest("Has been known to ambush people and attack feet during dark hours.")
 
 kitty_prince = Fluffy_Kitten.new("Prince", "male", "black and white", "standard, close-lying coat of fur")
-kitty_prince.add_point_of_interest("Affectionate attention-seeker - loves to cuddle, but will lie on your lap for hours and not want to move.")
+kitty_prince.add_point_of_interest("Affectionate attention-seeker.")
+kitty_prince.add_point_of_interest("Loves to cuddle, but will lie on your lap for hours and not want to move.")
 
 kitty_mindy = Fluffy_Kitten.new("Mindy", "female", "orange", "standard, close-lying coat of fur - soft")
-kitty_mindy.add_point_of_interest("Extremely shy, easy to frighten - but once she warms up to you, she is a giant sweetheart.")
+kitty_mindy.add_point_of_interest("Extremely shy, easy to frighten - is a giant sweetheart once she warms up to you.")
 
 @all_the_kittens = All_Deez_Fluffy_Kittens.new
 @all_the_kittens.add_this_kitten(fluffywillykitty)
@@ -86,13 +87,13 @@ template = %{
 				<ul>
 					<% kittens.each do |kitty_cat| %>
 						
-						<li><%= kitty_cat.this_cats_name %> is a <%= kitty_cat.this_cats_color %> <%= kitty_cat.this_cats_gender %> kitty.<br>
-						<%= kitty_cat.this_cats_name %>'s level of fluffinisity is: <%= kitty_cat.this_cats_fluffyness %>.<br>
-						Points of interest regarding <%= kitty_cat.this_cats_name %>:<br>
-						<% kitty_cat.traits.each do |point| %>
-							<li><%= point %></li>
-						<% end %>
-						</li>
+					<li><%= kitty_cat.this_cats_name %> is a <%= kitty_cat.this_cats_color %> <%= kitty_cat.this_cats_gender %> kitty.<br>
+					<%= kitty_cat.this_cats_name %>'s level of fluffinisity is: <%= kitty_cat.this_cats_fluffyness %>.<br>
+					Points of interest regarding <%= kitty_cat.this_cats_name %>:<br>
+					<% kitty_cat.traits.each do |point| %>
+						<li><%= point %></li>
+					<% end %>
+					</li>
 
 					<% end %>
 				</ul>
