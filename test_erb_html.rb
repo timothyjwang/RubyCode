@@ -88,8 +88,7 @@ template = %{
 		<body>
 			<h1>Fluffy Kittens for sale:</h1>
 				<ul>
-					<%# Stupidly easy fix, myah.  Remove "@all_the_kitens." below to get it to work (leave kittens.each) %>
-					<% @all_the_kittens.kittens.each do |kitty_cat| %>
+					<% kittens.each do |kitty_cat| %>
 						
 						<li><%= kitty_cat.this_cats_name %> is a <%= kitty_cat.this_cats_color %> <%= kitty_cat.this_cats_gender %> kitty.<br>
 						<%= kitty_cat.this_cats_name %>'s level of fluffinisity is: <%= kitty_cat.this_cats_fluffyness %>.<br>
