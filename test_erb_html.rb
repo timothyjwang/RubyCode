@@ -41,11 +41,6 @@ class Fluffy_Kitten
 	def add_point_of_interest( point )
 		@points_of_interest << point
 	end
-
-	# Support templating of member data.
-	# def get_binding
-	# 	binding
-	# end
 end
 
 class All_Deez_Fluffy_Kittens
@@ -61,6 +56,7 @@ class All_Deez_Fluffy_Kittens
 		@kittens
 	end
 
+	# Support templating of member data.
 	def get_binding
 		binding
 	end
