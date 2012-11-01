@@ -18,11 +18,49 @@ class Fluffy_Kitten
 		@points_of_interest = []
 	end
 
+	def this_cats_name
+		@name
+	end
+
+	def this_cats_gender
+		@gender
+	end
+
+	def this_cats_color
+		@color
+	end
+
+	def this_cats_fluffyness
+		@fluffyness
+	end
+
+	def traits
+		@points_of_interest
+	end
+
 	def add_point_of_interest( point )
 		@points_of_interest << point
 	end
 
 	# Support templating of member data.
+	# def get_binding
+	# 	binding
+	# end
+end
+
+class All_Deez_Fluffy_Kittens
+	def initialize
+		@kittens = []
+	end
+
+	def add_this_kitten( kitten )
+		@kittens << kitten
+	end
+
+	def kittens
+		@kittens
+	end
+
 	def get_binding
 		binding
 	end
@@ -35,13 +73,17 @@ template = %{
 		<body>
 			<h1>Fluffy Kittens for sale:</h1>
 				<ul>
-					<li><%= @name %> is a <%= @color %> <%= @gender %> kitty.<br>
-					<%= @name %>'s level of fluffinisity is: <%= @fluffyness %>.<br>
-					Points of interest regarding <%= @name %>:<br>
-					<% @points_of_interest.each do |point| %>
-						<li><%= point %></li>
+					<% all_the_kittens.each do |kitty_cat| %>
+						
+						<li><%= kitty_cat.this_cats_name %> is a <%= kitty_cat.this_cats_color %> <%= kitty_cat.this_cats_gender %> kitty.<br>
+						<%= kitty_cat.this_cats_name %>'s level of fluffinisity is: <%= kitty_cat.this_cats_fluffyness %>.<br>
+						Points of interest regarding <%= kitty_cat.this_cats_name %>:<br>
+						<% kitty_cat.traits.each do |point| %>
+							<li><%= point %></li>
+						<% end %>
+						</li>
+
 					<% end %>
-					</li>
 				</ul>
 		</body>
 	</html>
@@ -59,4 +101,9 @@ kitty_prince.add_point_of_interest("Affectionate attention-seeker - loves to be 
 kitty_mindy = Fluffy_Kitten.new("Mindy", "female", "orange", "standard, close-lying coat of fur - soft")
 kitty_mindy.add_point_of_interest("Extremely shy, easy to frighten - but once she warms up to you, she is a giant sweetheart.")
 
-rhtml.run(fluffywillykitty.get_binding)
+all_the_kittens = All_Deez_Fluffy_Kittens.new
+all_the_kittens.add_this_kitten(fluffywillykitty)
+all_the_kittens.add_this_kitten(kitty_prince)
+all_the_kittens.add_this_kitten(kitty_mindy)
+
+rhtml.run(all_the_kittens.get_binding)
