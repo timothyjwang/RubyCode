@@ -1,4 +1,4 @@
-# Version 0.1
+# Version 1.0
 # Similar to inputs_alphabetizer.rb - takes inputs, and shuffles them into a random order.
 
 puts "Add some stuff to shuffle.  When you are finished, enter a blank space."
