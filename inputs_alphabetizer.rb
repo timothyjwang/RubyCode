@@ -15,7 +15,7 @@ class Inputs_Alphabetizer
 		@big_ass_prompt = "How would you like your list?\n1: On individual lines?\n...or...\n2: All one one line, separated by commas?"
 	end
 
-	def get_alphebetizin
+	def get_alphabetizin
 		puts "#{@big_ass_prompt}"
 		
 		user_sorting_choice = gets.chomp.to_i
@@ -27,7 +27,7 @@ class Inputs_Alphabetizer
 			exit 0
 		else
 			puts "Input error: expecting either a 1 or a 2."
-			get_alphebetizin
+			get_alphabetizin
 		end
 	end
 
@@ -42,7 +42,7 @@ class Inputs_Alphabetizer
 		user_response = gets.chomp.downcase
 		if user_response == "y"
 			@alphabetize_me.sort!
-			get_alphebetizin
+			get_alphabetizin
 		else
 			add_to_array
 		end
