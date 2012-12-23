@@ -1,8 +1,6 @@
 # Version 2.0
 
 # Notes for next version:
-# Consider putting a way to "exit out" of the "list-creation loop" - in case someone
-	# figures out they still need to add something else
 # Consider putting in a way to allow users to copy/paste in lists (in a certain)
 	# format) - and allow them to add onto it
 
