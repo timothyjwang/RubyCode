@@ -8,39 +8,57 @@
 
 # This program takes user inputs, puts them into an array,
 # alphabetizes them, then outputs the alphabetized array.
-puts "Add some stuff to alphabetize.  When you are finished, enter a blank space."
-alphabetize_me = []
-big_ass_prompt = "How would you like your list?\n1: On individual lines?\n...or...\n2: All one one line, separated by commas?"
-run_me = 1
 
-while run_me == 1
-	user_input = gets.chomp.to_s
-	if user_input != ""
-		alphabetize_me.push user_input
-	else
-		puts "Is that all?"
-		if gets.chomp.to_s.downcase == "yes"
-			alphabetize_me.sort!
-			
-			puts "All done alphabetizing."
-			puts big_ass_prompt
-			user_sorting_choice = gets.chomp.to_s
-			
-			until user_sorting_choice == "1" || user_sorting_choice == "2"
-				puts "" # Blank space - easier to read.
-				puts "Input error: expecting either a 1 or a 2."
-				puts big_ass_prompt
-				user_sorting_choice = gets.chomp.to_s
-			end
-			if user_sorting_choice == "1"
-				puts alphabetize_me
-				exit 0
-			elsif user_sorting_choice == "2"
-				puts alphabetize_me.join(', ')
-				exit 0
-			end
+class Inputs_Alphabetizer
+	def initialize
+		@alphabetize_me = []
+		@big_ass_prompt = "How would you like your list?\n1: On individual lines?\n...or...\n2: All one one line, separated by commas?"
+	end
+
+	def get_alphebetizin
+		puts "#{@big_ass_prompt}"
+		
+		user_sorting_choice = gets.chomp.to_i
+		if user_sorting_choice == 1
+			puts @alphabetize_me
+			exit 0
+		elsif user_sorting_choice == 2
+			puts "#{@alphabetize_me.join(', ')}"
+			exit 0
 		else
-			# Anything but "yes" will have the while loop continue to re-run
+			puts "Input error: expecting either a 1 or a 2."
+			get_alphebetizin
 		end
 	end
+
+	def add_to_array
+		puts "Add some stuff to alphabetize.  When you are finished, enter a blank space."
+		add_stuff
+	end
+
+	def end_adding_stuff
+		puts "Are you finished adding stuff? (y/n)"
+	
+		user_response = gets.chomp.downcase
+		if user_response == "y"
+			@alphabetize_me.sort!
+			get_alphebetizin
+		else
+			add_to_array
+		end
+	end
+
+	def add_stuff
+		this_thing = gets.chomp
+
+		if this_thing != ""
+			@alphabetize_me << this_thing
+			add_stuff
+		else
+			end_adding_stuff
+		end
+	end
+
 end
+
+Inputs_Alphabetizer.new.add_to_array
