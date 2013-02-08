@@ -3,41 +3,46 @@ require File.expand_path(File.dirname(__FILE__) + '/edgecase')
 class AboutHashes < EdgeCase::Koan
   def test_creating_hashes
     empty_hash = Hash.new
-    assert_equal __, empty_hash.class
+    assert_equal Hash, empty_hash.class
     assert_equal({}, empty_hash)
-    assert_equal __, empty_hash.size
+    assert_equal 0, empty_hash.size
   end
 
   def test_hash_literals
     hash = { :one => "uno", :two => "dos" }
-    assert_equal __, hash.size
+    assert_equal 2, hash.size
   end
 
   def test_accessing_hashes
     hash = { :one => "uno", :two => "dos" }
-    assert_equal __, hash[:one]
-    assert_equal __, hash[:two]
-    assert_equal __, hash[:doesnt_exist]
+    assert_equal "uno", hash[:one]
+    assert_equal "dos", hash[:two]
+    assert_equal nil, hash[:doesnt_exist]
   end
 
   def test_accessing_hashes_with_fetch
     hash = { :one => "uno" }
-    assert_equal __, hash.fetch(:one)
-    assert_raise(___) do
+    assert_equal "uno", hash.fetch(:one)
+    assert_raise(KeyError) do
       hash.fetch(:doesnt_exist)
     end
 
     # THINK ABOUT IT:
     #
     # Why might you want to use #fetch instead of #[] when accessing hash keys?
+    # Because hashes can contain "named" references to it's contents; ie, in the hash...
+    # some_hash = { :the_number_one => 1, :the_number_two => 2 }
+    # ...keys can have named references, or identifiers, whereas arrays use indices.
+
+    # Also, hashes don't find contents based on array indices ( [x] )
   end
 
   def test_changing_hashes
     hash = { :one => "uno", :two => "dos" }
     hash[:one] = "eins"
 
-    expected = { :one => __, :two => "dos" }
-    assert_equal __, expected == hash
+    expected = { :one => "eins", :two => "dos" }
+    assert_equal true, expected == hash
 
     # Bonus Question: Why was "expected" broken out into a variable
     # rather than used as a literal?
@@ -47,23 +52,23 @@ class AboutHashes < EdgeCase::Koan
     hash1 = { :one => "uno", :two => "dos" }
     hash2 = { :two => "dos", :one => "uno" }
 
-    assert_equal __, hash1 == hash2
+    assert_equal true, hash1 == hash2
   end
 
   def test_hash_keys
     hash = { :one => "uno", :two => "dos" }
-    assert_equal __, hash.keys.size
-    assert_equal __, hash.keys.include?(:one)
-    assert_equal __, hash.keys.include?(:two)
-    assert_equal __, hash.keys.class
+    assert_equal 2, hash.keys.size
+    assert_equal true, hash.keys.include?(:one)
+    assert_equal true, hash.keys.include?(:two)
+    assert_equal Array, hash.keys.class
   end
 
   def test_hash_values
     hash = { :one => "uno", :two => "dos" }
-    assert_equal __, hash.values.size
-    assert_equal __, hash.values.include?("uno")
-    assert_equal __, hash.values.include?("dos")
-    assert_equal __, hash.values.class
+    assert_equal 2, hash.values.size
+    assert_equal true, hash.values.include?("uno")
+    assert_equal true, hash.values.include?("dos")
+    assert_equal Array, hash.values.class
   end
 
   def test_combining_hashes
