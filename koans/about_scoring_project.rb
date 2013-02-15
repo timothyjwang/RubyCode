@@ -32,13 +32,40 @@ require File.expand_path(File.dirname(__FILE__) + '/edgecase')
 def score(dice)
 	# You need to write this method
 	total_score = 0
+	possible_rolls = [1, 2, 3, 4, 5, 6]
 
 	dice.each do |roll|
 		total_score += 50 if roll == 5
 		total_score += 100 if roll == 1
 	end
 	# ^ that is all fine, up until line 67
-	
+
+	possible_rolls.each do |num|
+		if dice.count(num) == 3
+			if num == 1
+				total_score += 700
+			elsif num == 5
+				total_score += 350
+			else
+				total_score += (num * 100)
+			end
+		elsif dice.count(num) == 4
+			if num == 1
+				total_score += 800
+			elsif num == 5
+				total_score += 350
+			else
+				total_score += (num * 100)
+			end
+		elsif dice.count(num) == 5
+			if num == 1
+				total_score += 900
+			elsif num == 5
+				total_score += 400
+			end
+		end
+	end
+
 	return total_score
 end
 
