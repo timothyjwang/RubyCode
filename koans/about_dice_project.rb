@@ -1,17 +1,16 @@
 require File.expand_path(File.dirname(__FILE__) + '/edgecase')
 
 # Implement a DiceSet Class here:
-#
+
 class DiceSet
   def initialize
     @values = []
   end
 
   def roll(x)
-    i = 0
-    until i == x
-      @values << (i + 1)
-      i += 1
+    until @values.length == x
+      this_num = rand(x) + 1
+      @values << this_num if (@values.include?(this_num) != true)
     end
   end
 
