@@ -8,9 +8,12 @@ class DiceSet
   end
 
   def roll(x)
+    @values = []
+
     until @values.length == x
       this_num = rand(x) + 1
       @values << this_num if (@values.include?(this_num) != true)
+      @values.shuffle!
     end
   end
 
