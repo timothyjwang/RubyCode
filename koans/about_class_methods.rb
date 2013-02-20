@@ -19,11 +19,13 @@ class AboutClassMethods < EdgeCase::Koan
 
   def test_objects_have_methods
     fido = Dog.new
-    assert fido.methods.size > _n_
+    assert fido.methods.size > 65
+    # irb reports 56, but the above assertion (line 22) won't fail until the number is >= 66
   end
 
   def test_classes_have_methods
-    assert Dog.methods.size > _n_
+    assert Dog.methods.size > 107
+    # irb reports 97, but the above assertion (line 27) won't fail until the number is >= 108
   end
 
   def test_you_can_define_methods_on_individual_objects
