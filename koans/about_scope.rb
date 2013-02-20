@@ -47,7 +47,7 @@ class AboutScope < EdgeCase::Koan
   end
 
   def test_use_the_prefix_scope_operator_to_force_the_global_scope
-    assert_equal __, ::String == "HI".class
+    assert_equal true, ::String == "HI".class
   end
 
   # ------------------------------------------------------------------
@@ -55,7 +55,7 @@ class AboutScope < EdgeCase::Koan
   PI = 3.1416
 
   def test_constants_are_defined_with_an_initial_uppercase_letter
-    assert_equal __, PI
+    assert_equal 3.1416, PI
   end
 
   # ------------------------------------------------------------------
