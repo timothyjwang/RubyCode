@@ -107,7 +107,7 @@ class AboutClassMethods < EdgeCase::Koan
                                    end
   
   def test_class_statements_return_the_value_of_their_last_expression
-    assert_equal __, LastExpressionInClassStatement
+    assert_equal 21, LastExpressionInClassStatement
   end
 
   # ------------------------------------------------------------------
@@ -117,7 +117,7 @@ class AboutClassMethods < EdgeCase::Koan
                                end
 
   def test_self_while_inside_class_is_class_object_not_instance
-    assert_equal __, Dog == SelfInsideOfClassStatement
+    assert_equal true, Dog == SelfInsideOfClassStatement
   end
 
   # ------------------------------------------------------------------
