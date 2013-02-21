@@ -129,7 +129,7 @@ class AboutClassMethods < EdgeCase::Koan
   end
 
   def test_you_can_use_self_instead_of_an_explicit_reference_to_dog
-    assert_equal __, Dog.class_method2
+    assert_equal :another_way_to_write_class_methods, Dog.class_method2
   end
 
   # ------------------------------------------------------------------
@@ -143,7 +143,7 @@ class AboutClassMethods < EdgeCase::Koan
   end
 
   def test_heres_still_another_way_to_write_class_methods
-    assert_equal __, Dog.another_class_method
+    assert_equal :still_another_way, Dog.another_class_method
   end
 
   # THINK ABOUT IT:
