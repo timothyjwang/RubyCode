@@ -38,9 +38,13 @@ green_apple = { :color => "green",    :sourness => "slightly sour" }
 puts
 
 # Can call .keys to get a list of all the keys within a hash
-puts "red_apple keys:   #{red_apple.keys.join(', ')}   green_apple keys: #{green_apple.keys.join(', ')}"
+puts "red_apple keys:   #{red_apple.keys}    green_apple keys: #{green_apple.keys}"
 # Likewise, call .values to get a list of all the values within a hash
-puts "red_apple keys:   #{red_apple.values.join(', ')}    green_apple keys: #{green_apple.values.join(', ')}"
+puts "red_apple values: #{red_apple.values}   green_apple keys: #{green_apple.values}"
+
+# As .keys and .values return arrays, those arrays can be joined with .join():
+# puts "red_apple keys:   #{red_apple.keys.join(', ')}   green_apple keys: #{green_apple.keys.join(', ')}"
+# puts "red_apple keys:   #{red_apple.values.join(', ')}    green_apple keys: #{green_apple.values.join(', ')}"
 
 puts
 
