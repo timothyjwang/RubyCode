@@ -17,6 +17,10 @@ class Proxy
     @object = target_object
     # ADD MORE CODE HERE
     @power = :on
+
+    @power_call = 0
+    @channel_call = 0
+    @on_call = 0
   end
 
   # WRITE CODE HERE
@@ -29,6 +33,17 @@ class Proxy
     else
       @object.power
     end
+
+    @on_call += 1
+  end
+
+  def power
+    @object.power
+    @power_call += 1
+  end
+
+  def channel
+    @channel
   end
 
   def messages
@@ -43,7 +58,9 @@ class Proxy
   end
 
   def number_of_times_called(attribute)
-
+    return @power_call   if attribute == :power
+    return @channel_call if attribute == :channel=
+    return @on_call      if attribute == :on?
   end
 end
 
