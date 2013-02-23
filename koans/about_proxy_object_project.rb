@@ -19,6 +19,16 @@ class Proxy
   end
 
   # WRITE CODE HERE
+
+  attr_accessor :channel, :power
+
+  def on?
+    if @object.on?
+      true
+    else
+      @object.power
+    end
+  end
 end
 
 # The proxy object should pass the following Koan:
