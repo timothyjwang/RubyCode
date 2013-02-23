@@ -32,7 +32,21 @@ class Proxy
   end
 
   def messages
-    [:power, :channel=]
+    @messages = [ :power, :channel= ]
+  end
+
+  def called?(attribute)
+    messages
+
+    if attribute == :power
+      @messages[0]
+    elsif attribute == :channel=
+      @messages[1]
+    end
+  end
+
+  def number_of_times_called(attribute)
+    
   end
 end
 
