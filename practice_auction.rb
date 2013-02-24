@@ -60,4 +60,3 @@ puts
 green_chair.add_bid(65 => Time.now)
 puts "Bid history:     #{green_chair.call_history}"
 puts "Current top bid: #{green_chair.call_current_top_bid}"
-
