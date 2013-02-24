@@ -27,9 +27,15 @@ class AuctionItem
 
 	def add_bid(bid)
 		this_bid = Hash[*bid.flatten]
-		@bid_history = @bid_history.merge(this_bid)
 
-		@current_top_bid = this_bid.keys[0]
+		if this_bid.keys[0] > @current_top_bid
+			@bid_history = @bid_history.merge(this_bid)
+
+			@current_top_bid = this_bid.keys[0]
+		else
+			puts "Fault: cannot add your bid of #{this_bid.keys[0]}, because it is lss than the current top bid of #{@current_top_bid}."
+		end
+
 	end
 end
 
@@ -50,3 +56,7 @@ puts "Bid history:     #{green_chair.call_history}"
 puts "Current top bid: #{green_chair.call_current_top_bid}"
 
 puts
+
+green_chair.add_bid(65 => Time.now)
+puts "Bid history:     #{green_chair.call_history}"
+puts "Current top bid: #{green_chair.call_current_top_bid}"
