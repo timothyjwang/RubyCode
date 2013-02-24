@@ -48,8 +48,10 @@ puts "red_apple values: #{red_apple.values}   green_apple keys: #{green_apple.va
 
 puts
 
+# Can call keys by their name (:color or :sourness) to return the value associated with that key:
 puts "red_apple color: #{red_apple[:color]}   red_apple sourness: #{red_apple[:sourness]}"
 puts "green_apple color: #{green_apple[:color]}    green_apple sourness: #{green_apple[:sourness]}"
+# Note that keys are called as you might call indices of an array - via square brackets
 
 puts
 
