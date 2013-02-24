@@ -55,10 +55,19 @@ puts "green_apple color: #{green_apple[:color]}    green_apple sourness: #{green
 
 puts
 
+# Note that calling the key returns the value associated with that key - the object_id associated with that value will change...
 puts "red_apple[:color].object_id == green_apple[:color].object_id ...?"
-puts "  #{red_apple[:color].object_id == green_apple[:color].object_id}: #{red_apple[:color].object_id}" + " != " "#{green_apple[:color].object_id}"
+puts "  #{red_apple[:color].object_id == green_apple[:color].object_id}: #{red_apple[:color].object_id} != #{green_apple[:color].object_id}"
 puts "red_apple[:sourness].object_id == green_apple[:sourness].object_id ...?"
-puts "  #{red_apple[:sourness].object_id == green_apple[:sourness].object_id}: #{red_apple[:sourness].object_id}" + " != " "#{green_apple[:sourness].object_id}"
+puts "  #{red_apple[:sourness].object_id == green_apple[:sourness].object_id}: #{red_apple[:sourness].object_id} != #{green_apple[:sourness].object_id}"
+
+puts
+
+# ...however, the object_id of the keys are the same, across different hashes, or key-value pairs (provided those keys have the same name):
+puts "red_apple.keys[0].object_id == green_apple.keys[0].object_id ...?"
+puts "  #{red_apple.keys[0].object_id == green_apple.keys[0].object_id}: #{red_apple.keys[0].object_id} == #{green_apple.keys[0].object_id}"
+puts "red_apple.keys[1].object_id == green_apple.keys[1].object_id ...?"
+puts "  #{red_apple.keys[1].object_id == green_apple.keys[1].object_id}: #{red_apple.keys[1].object_id} == #{green_apple.keys[1].object_id}"
 
 
 
